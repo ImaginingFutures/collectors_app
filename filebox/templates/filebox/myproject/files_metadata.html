@@ -1,0 +1,36 @@
+{% extends 'main.html' %}
+{% load django_bootstrap5 django_bootstrap_input_group static %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Media Viewer -->
+        <div class="col-md-6">
+            <div class="media-viewer">
+                <!-- Replace with your media viewer component -->
+                <img src="path/to/image.jpg" alt="Media" class="img-fluid">
+                <!-- For video or audio, use <video> or <audio> tags respectively -->
+            </div>
+        </div>
+        <!-- Metadata Form -->
+        <div class="col-md-6">
+            <form method="post">
+                {% csrf_token %}
+                <!-- Replace with your form fields -->
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description"></textarea>
+                </div>
+                <!-- Add more fields as needed -->
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
