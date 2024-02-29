@@ -20,6 +20,8 @@ class UserProject(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     is_approved = models.BooleanField(default=False)
     
+    is_lead = models.BooleanField(default=False)
+    
     history = HistoricalRecords()
     
     class Meta:
@@ -34,6 +36,7 @@ class UserProject(models.Model):
 class NonUserProject(models.Model):
     user = models.ForeignKey(Contributor, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    is_lead = models.BooleanField(default=False)
     
     history = HistoricalRecords()
     
