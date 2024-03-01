@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from simple_history.models import HistoricalRecords
-from projects.models import Project
+from CA_Django_connector.models import Project
 
 class Contributor(models.Model):
     """

@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from simple_history.models import HistoricalRecords
 
+# Create your models here.
+
 class Place(models.Model):
     
     place_name = models.CharField(max_length=100)
@@ -13,8 +15,33 @@ class Place(models.Model):
     def __str__(self) -> str:
         return f'{self.place_name} ({self.place_type})'
 
-# Create your models here.
+
+class Languages(models.Model):
+    
+    language = models.CharField(max_length=100)
+    iso_language_name = models.CharField(max_length=100)
+    alpha2 = models.CharField(max_length=2)
+    alpha3 = models.CharField(max_length=3)
+
+    history = HistoricalRecords()
+    
+class Themes(models.Model):
+    
+    theme = models.CharField(max_length=70)
+    history = HistoricalRecords()
+
+class Rights(models.Model):
+    
+    license = models.CharField(max_length=100)
+    license_abreviation = models.CharField(max_length=20)
+    license_expanded = models.CharField(max_length = 200)
+    
+    history = HistoricalRecords()
+
 class Project(models.Model):
+    """
+    Reduced model for the table ca_collections
+    """
     project_idno = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=200, unique=True,)
     project_description = models.TextField(max_length=1000, null=True)
@@ -37,8 +64,22 @@ class Project(models.Model):
     
     def __str__(self) -> str:
         return f'{self.name}'
-    
 
-   
+class Records(models.Model):
+    """
+    Reduced model for ca_objects
+    """
     
+    record_idno = models.CharField(max_length=100, unique=True)
+    collection = models.ManyToManyField(Project)
+    preferred_labels = models.CharField(max_length=200)
+    langmaterial = models.ManyToManyField(Languages, blank=True)
+    themes = models.ManyToManyField(Themes, blank=True)
+    places = models.ManyToManyField(Place, blank=True)
+    date_creation = models.DateField(blank=True, null=True)
+    creator = models.ManyToManyField(User, blank=True, related_name='creators')
+    rights_holders = models.ManyToManyField(User, blank=True, related_name='rights_holders')
+    license = models.ForeignKey(Rights, on_delete=models.SET_DEFAULT, default=1)
+    media = models.ManyToManyField('filebox.UploadFile', blank=True)
     
+    history = HistoricalRecords()

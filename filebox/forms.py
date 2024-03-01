@@ -1,6 +1,6 @@
 from django import forms
 from .models import UploadFile
-from projects.models import Project
+from CA_Django_connector.models import Project
 
 from dal import autocomplete
 

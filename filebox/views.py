@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 from .forms import UploadForm
 from .models import UploadFile
-from projects.models import Project
+from CA_Django_connector.models import Project
 
 from dal import autocomplete
 

@@ -1,0 +1,175 @@
+{% extends 'main.html' %}
+{% load django_bootstrap5 django_bootstrap_input_group static %}
+{% block content %}
+
+<div class="container mt-4">
+  <h1>Syria</h1>
+  <h2>Recipes and Cultures</h2>
+
+  <h3>Dr. Aqeel Abdulla</h3>
+
+    <div class="row" id="mapid"></div>
+
+</div>
+
+<!-- Ensure each modal has a unique ID -->
+<div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-labelledby="pdfViewerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-lg-down modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="pdfViewerModalLabel"></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="pdfViewerContainer"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+    var map = L.map('mapid').setView([35, 38], 5.5);
+    
+    var GeoportailFrance = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
+        attribution: '<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>',
+        bounds: [[-75, -180], [81, 180]],
+        minZoom: 5,
+        maxZoom: 12,
+        apikey: 'choisirgeoportail',
+        format: 'image/jpeg',
+        style: 'normal'
+    });
+
+    var CyclOSM = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+        minZoom: 5,
+        attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    var GeoportailFrance_plan = L.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
+      attribution: '<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>',
+      bounds: [[-75, -180], [81, 180]],
+      minZoom: 5,
+      maxZoom: 7,
+      apikey: 'choisirgeoportail',
+      format: 'image/png',
+      style: 'normal'
+    });
+
+    var bounds = L.latLngBounds([[40.37, 30.89], [28.22, 52.13]]);
+    
+    map.setMaxBounds(bounds);
+    map.on('drag', function() {
+      map.panInsideBounds(bounds, { animate: false });
+    });
+
+    // if possible, include more layers.
+    var baseLayers = {
+      "Satellite View": GeoportailFrance,
+      "Street Map": CyclOSM,
+      "Base Map": GeoportailFrance_plan
+    };
+
+    GeoportailFrance.addTo(map); // default map
+    L.control.layers(baseLayers).addTo(map); // Layer control
+
+    var svgTemplate = `<svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 149 178"><path fill="{mapIconColor}" stroke="#FFF" stroke-width="6" stroke-miterlimit="10" d="M126 23l-6-6A69 69 0 0 0 74 1a69 69 0 0 0-51 22A70 70 0 0 0 1 74c0 21 7 38 22 52l43 47c6 6 11 6 16 0l48-51c12-13 18-29 18-48 0-20-8-37-22-51z"/><circle fill="{mapIconColorInnerCircle}" cx="74" cy="75" r="61"/><circle fill="#FFF" cx="74" cy="75" r="{pinInnerCircleRadius}"/></svg>`;
+
+    var mapIconColor = '#FF5733';
+    var mapIconColorInnerCircle = '#3498DB';
+    var pinInnerCircleRadius = '30';
+
+    var svgIconHtml = svgTemplate
+        .replace('{mapIconColor}', mapIconColor)
+        .replace('{mapIconColorInnerCircle}', mapIconColorInnerCircle)
+        .replace('{pinInnerCircleRadius}', pinInnerCircleRadius);
+
+    var svgIcon = L.divIcon({
+        className: 'svg-marker',
+        html: svgIconHtml,
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        popupAnchor: [0, -40]
+    });
+
+    var markers = L.markerClusterGroup({
+      spiderfyOnMaxZoom: true,
+      showCoverageOnHover: false,
+      zoomToBoundsOnClick: true
+    });
+
+
+    var points = [
+        {"lat": 36.2025, "lng": 36.160556, "title": "Syrians from Antakya", "pdf_url": "{% static 'ifcollectors/pdf/chapter_1.pdf' %}"},
+        {"lat": 37.05, "lng": 41.22, "title": "Assyrian Dikhwa","pdf_url": "{% static 'ifcollectors/pdf/chapter_2.pdf' %}"},
+        {"lat": 35.95, "lng": 39.01, "title": "Raqqa", "pdf_url": "{% static 'ifcollectors/pdf/chapter_3.pdf' %}"},
+        {"lat": 35.633889, "lng": 35.956111, "title": "Eid Bulgur of the Coastal Countryside", "pdf_url": "{% static 'ifcollectors/pdf/chapter_4.pdf' %}"},
+        {"lat": 35.101389, "lng": 36.161111, "title": "Al-Qadmus", "pdf_url": "{% static 'ifcollectors/pdf/chapter_5.pdf' %}"},
+        {"lat": 34.453611, "lng": 40.936667, "title": "Al Bukamal and Deir Ez-zor", "pdf_url": "{% static 'ifcollectors/pdf/chapter_6.pdf' %}"},
+        {"lat": 35.933333, "lng": 36.633333, "title": "Harem and Idlib", "pdf_url": "{% static 'ifcollectors/pdf/chapter_7.pdf' %}"},
+        {"lat": 35.25, "lng": 36.583333, "title": "St Barbara’s Day and Sleiqa", "pdf_url": "{% static 'ifcollectors/pdf/chapter_8.pdf' %}"},
+        {"lat": 35.925, "lng": 35.988611, "title": "Mary’s Assumption Day, Hareesa, and Syrian Armenians", "pdf_url": "{% static 'ifcollectors/pdf/chapter_9.pdf' %}"},
+        {"lat": 32.625278, "lng": 36.106111, "title": "Daraa and its Mleihi Mansaf", "pdf_url": "{% static 'ifcollectors/pdf/chapter_10.pdf' %}"},
+        {"lat": 32.609444, "lng": 34.917778, "title": "The Palestinians of Syria", "pdf_url": "{% static 'ifcollectors/pdf/chapter_11.pdf' %}"},
+    ];
+
+    points.forEach(function(point) {
+        var marker = L.marker([point.lat, point.lng], {icon: svgIcon}).addTo(map);
+        marker.bindPopup('<a href="#" class="pdf-trigger" data-pdf-path="' + point.pdf_url + '">' + point.title + '</a>');
+        markers.addLayer(marker);
+    });
+
+    map.addLayer(markers);
+
+</script>
+
+<script>
+
+  
+
+  function loadAndDisplayPDF(pdfPath) {
+    var container = document.getElementById('pdfViewerContainer');
+    container.innerHTML = ''; // Clear previous content
+
+    pdfjsLib.getDocument(pdfPath).promise.then(function(pdfDoc) {
+        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+            pdfDoc.getPage(pageNum).then(function(page) {
+                var canvas = document.createElement('canvas');
+                canvas.className = 'pdf-page-canvas';
+                container.appendChild(canvas);
+
+                var context = canvas.getContext('2d');
+                var viewport = page.getViewport({scale: 1.5});
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            });
+        }
+    }).catch(function(error) {
+        console.log("Error loading PDF: ", error);
+    });
+}
+
+// Triggering the modal and loading the PDF
+document.addEventListener('DOMContentLoaded', function() { 
+  document.body.addEventListener('click', function(event) {
+      if (event.target.classList.contains('pdf-trigger')) { 
+          var pdfPath = event.target.getAttribute('data-pdf-path');
+          loadAndDisplayPDF(pdfPath);
+          $('#pdfViewerModal').modal('show');
+      }
+  });
+});
+
+
+</script>
+
+{% endblock content %}
