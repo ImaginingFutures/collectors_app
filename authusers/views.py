@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth  import authenticate, login, logout
+from django.contrib.auth.models import Group
 from django.contrib import messages
 from .forms import RegisterUserForm
 
@@ -36,13 +37,20 @@ def register_user(request):
         form = RegisterUserForm(request.POST)
         if form.is_valid():
             form.save()
+            
+            # Associate recent user with the group.
+            user = form.save()
+            group, created = Group.objects.get_or_create(name='public_users')
+            group.user_set.add(user)
+            
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
-            
             user = authenticate(username=username, password=password)
-            login(request, user)
-            messages.success(request, f"Welcome {username}")
-            return redirect('home')
+            
+            if user:
+                login(request, user)
+                messages.success(request, f"Welcome {username}")
+                return redirect('home')
     else:
         form = RegisterUserForm()
     return render(request, 'authusers/register.html', {'form':form})

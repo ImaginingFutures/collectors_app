@@ -17,3 +17,14 @@ class MapExhibit(Exhibit):
 """ class GalleryExhibit(Exhibit):
     images = models.ManyToManyField('YourImageModel', related_name='galleries') """
 
+
+class Contributions(models.Model):
+    pass
+
+class MapExhibitContribution(models.Model):
+    
+    name = models.CharField(max_length=150, blank=True, null=True)
+    recipe_name = models.CharField(max_length=150)
+    recipe = models.TextField(max_length=2000, help_text="2000 characters max")
+    cultural_connections = models.TextField(max_length=1000, help_text="Add your personal/cultural connection with that recipe")
+    media = models.FileField(upload_to='uploads/', help_text='Share files under 100MB')

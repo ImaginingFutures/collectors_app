@@ -3,12 +3,36 @@
 {% block content %}
 
 <div class="container mt-4">
-  <h1>Syria</h1>
-  <h2>Recipes and Cultures</h2>
-
+  <div class="exhibit-header my-4">
+  <h1>Syria. Recipes and Cultures</h2>
   <h3>Dr. Aqeel Abdulla</h3>
 
+  Part of: <a href="https://ifrepo.world/Detail/collections/27">Food, Hospitality, and the Micro-cultures of Syria</a>
+  </div>
+
+    <div class="row my-4 map-header">
+      <a href="#" class="btn btn-info pdf-trigger" data-pdf-path="{% static 'ifcollectors/pdf/chapter_introduction.pdf' %}">Introduction</a>
+    </div>
+
     <div class="row" id="mapid"></div>
+
+    <div class="row my-4 map-header">
+      <a href="#" class="btn btn-info pdf-trigger" data-pdf-path="{% static 'ifcollectors/pdf/chapter_conclusion.pdf' %}">Observations and Reflections</a>
+    </div>
+
+    <div class="row">
+      {% if perms.exhibits.add_mapexhibitcontribution %}
+      <a href="{% url 'map-contribute' %}" class="btn btn-success btn-lg mt-2 mb-4">Share your recipe <i class="far fa-comment"></i></a>
+        {% else %}
+        <a href="{% url 'register' %}" class="btn btn-success btn-lg mt-2 mb-4">Register to share your recipe <i class="far fa-comment"></i></a>
+      {% endif %}
+      {% if user.is_authenticated %}
+            
+      {% endif %}
+
+    </div>
+    
+
 
 </div>
 
