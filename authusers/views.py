@@ -50,7 +50,9 @@ def register_user(request):
             if user:
                 login(request, user)
                 messages.success(request, f"Welcome {username}")
-                return redirect('home')
+                next_url = request.POST.get('next', 'home')
+                return redirect(next_url)
     else:
         form = RegisterUserForm()
-    return render(request, 'authusers/register.html', {'form':form})
+        next_url = request.GET.get('next', '')
+        return render(request, 'authusers/register.html', {'form': form, 'next': next_url})
