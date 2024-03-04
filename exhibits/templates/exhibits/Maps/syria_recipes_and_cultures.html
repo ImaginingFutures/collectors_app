@@ -36,7 +36,6 @@
 
 </div>
 
-<!-- Ensure each modal has a unique ID -->
 <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-labelledby="pdfViewerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-lg-down modal-xl">
       <div class="modal-content">
@@ -45,6 +44,13 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <!-- Spinner -->
+          <div id="pdfLoader" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <!-- PDF Viewer Container -->
           <div id="pdfViewerContainer"></div>
         </div>
         <div class="modal-footer">
@@ -156,7 +162,10 @@
 
   function loadAndDisplayPDF(pdfPath) {
     var container = document.getElementById('pdfViewerContainer');
+    var loader = document.getElementById('pdfLoader');
     container.innerHTML = ''; // Clear previous content
+
+    loader.style.display = 'block';
 
     pdfjsLib.getDocument(pdfPath).promise.then(function(pdfDoc) {
         for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
@@ -177,8 +186,10 @@
                 page.render(renderContext);
             });
         }
+        loader.style.display = 'none';
     }).catch(function(error) {
         console.log("Error loading PDF: ", error);
+        loader.style.display = 'none';
     });
 }
 
