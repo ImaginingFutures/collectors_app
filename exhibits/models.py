@@ -25,10 +25,10 @@ class Contributions(models.Model):
 
 class MapExhibitContribution(models.Model):
     
-    username = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_mapcontribution", default=1) # get the name by the username.
+    username = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_mapcontribution") # get the name by the username.
     recipe_name = models.CharField(max_length=150)
     recipe = models.TextField(max_length=2000, help_text="2000 characters max")
     cultural_connections = models.TextField(max_length=1000, help_text="Add your personal/cultural connection with that recipe")
-    media = models.FileField(upload_to='uploads/', help_text='Share files under 100MB')
+    media = models.FileField(upload_to='uploads/', help_text='Share files under 100MB', blank=True, null=True)
 
     history = HistoricalRecords()
