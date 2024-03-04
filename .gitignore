@@ -1,0 +1,3 @@
+.env
+appslogs/apps.log
+appslogs/general.log
