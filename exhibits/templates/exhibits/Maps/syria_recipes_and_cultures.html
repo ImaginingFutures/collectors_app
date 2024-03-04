@@ -37,7 +37,7 @@
 </div>
 
 <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-labelledby="pdfViewerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-lg-down modal-xl">
+    <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-lg-down">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="pdfViewerModalLabel"></h1>
@@ -175,7 +175,7 @@
                 container.appendChild(canvas);
 
                 var context = canvas.getContext('2d');
-                var viewport = page.getViewport({scale: 1.5});
+                var viewport = page.getViewport({scale: 1.2});
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
 

@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container mt-4">
-    <h2>Submit Your Contribution</h2>
+    <h2>Submit Your Contribution {{ user.get_username }}</h2>
     {% if perms.exhibits.add_mapexhibitcontribution %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
