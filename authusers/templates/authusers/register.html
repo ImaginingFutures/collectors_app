@@ -8,6 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6 shadow auth-forms-container">
     <h2 class="mb-4">Register</h2>
+    <a href="{% url 'login' %}?next={{ request.GET.next }}">Already registered? Log in here</a>
     <form action="{% url 'register' %}" method="post" class="form">
         {% csrf_token %}
         {% include '_form_errors.html' %}

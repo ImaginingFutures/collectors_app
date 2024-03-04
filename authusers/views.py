@@ -15,15 +15,18 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None and password is not None:
             login(request, user)
+            next_url = request.POST.get('next', 'home')
             messages.success(request, f"Hi again {username} :)")
-            return redirect('home')
+            return redirect(next_url)
             
         else:
-            messages.error(request, f"It wasn't possible to log in with the user {username}.")
+            
+            messages.error(request, f"Invalid username \({username}\) or password.")
             return redirect('login')
         
     else:
-        return render(request, 'authusers/login.html', {})
+        next_url = request.GET.get('next', '')
+        return render(request, 'authusers/login.html', {'next': next_url})
 
 
 def logout_user(request):

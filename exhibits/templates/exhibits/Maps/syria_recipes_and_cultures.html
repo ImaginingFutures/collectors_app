@@ -24,7 +24,7 @@
       {% if perms.exhibits.add_mapexhibitcontribution %}
       <a href="{% url 'map-contribute' %}" class="btn btn-success btn-lg mt-2 mb-4">Share your recipe <i class="far fa-comment"></i></a>
         {% else %}
-        <a href="{% url 'register' %}" class="btn btn-success btn-lg mt-2 mb-4">Register to share your recipe <i class="far fa-comment"></i></a>
+        <a href="{% url 'register' %}?next={{ request.path }}" class="btn btn-success btn-lg mt-2 mb-4">Register to share your recipe <i class="far fa-comment"></i></a>
       {% endif %}
       {% if user.is_authenticated %}
             
