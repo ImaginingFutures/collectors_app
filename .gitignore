@@ -2,7 +2,6 @@
 appslogs/apps.log
 appslogs/general.log
 __pycache__
-*migrations*
 media/
 staticfiles/autocomplete_light/
 staticfiles/polymorphic/
