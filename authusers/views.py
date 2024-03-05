@@ -55,8 +55,12 @@ def register_user(request):
                 next_url = request.POST.get('next', 'home')
                 return redirect(next_url)
             else:
-                messages.error(request, f"There is an error in your registration")
-                return redirect('register')
+                messages.error(request, "Authentication failed. Please try again.")
+                return render(request, 'authusers/register.html', {'form': form})
+        else:
+            # if form is not valid
+            messages.error(request, "Please correct the errors below.")
+            return render(request, 'authusers/register.html', {'form': form})
     else:
         form = RegisterUserForm()
         next_url = request.GET.get('next', 'home')
