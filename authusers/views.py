@@ -25,7 +25,7 @@ def login_user(request):
             return redirect('login')
         
     else:
-        next_url = request.GET.get('next', '')
+        next_url = request.GET.get('next', 'home')
         return render(request, 'authusers/login.html', {'next': next_url})
 
 
