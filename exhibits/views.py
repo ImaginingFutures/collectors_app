@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import MapExhibitContribution
 from .forms import MapExhibitContributionForm
 from django.views.generic import CreateView
@@ -9,7 +8,7 @@ from django.views.generic import CreateView
 def testing_map(request):
     return render(request, 'exhibits/Maps/syria_recipes_and_cultures.html') 
 
-class MapExhibitContributionCreateView(LoginRequiredMixin, CreateView):
+class MapExhibitContributionCreateView(CreateView):
     model = MapExhibitContribution
     form_class = MapExhibitContributionForm
     template_name = 'exhibits/Contact/exhibits_contribute.html'
