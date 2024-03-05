@@ -39,10 +39,9 @@ def register_user(request):
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             
             # Associate recent user with the group.
-            user = form.save()
             group, created = Group.objects.get_or_create(name='public_users')
             group.user_set.add(user)
             
@@ -57,5 +56,5 @@ def register_user(request):
                 return redirect(next_url)
     else:
         form = RegisterUserForm()
-        next_url = request.GET.get('next', '')
+        next_url = request.GET.get('next', 'home')
         return render(request, 'authusers/register.html', {'form': form, 'next': next_url})
