@@ -54,6 +54,9 @@ def register_user(request):
                 messages.success(request, f"Welcome {username}")
                 next_url = request.POST.get('next', 'home')
                 return redirect(next_url)
+            else:
+                messages.error(request, f"There is an error in your registration")
+                return redirect('register')
     else:
         form = RegisterUserForm()
         next_url = request.GET.get('next', 'home')
