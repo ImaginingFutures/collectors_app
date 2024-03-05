@@ -2,7 +2,10 @@
 appslogs/apps.log
 appslogs/general.log
 __pycache__
-media/
+media/*
+!media/uploads
+media/uploads/*
+!media/uploads/index.txt
 staticfiles/autocomplete_light/
 staticfiles/polymorphic/
 staticfiles/vendor/
