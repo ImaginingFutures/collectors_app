@@ -11,7 +11,7 @@
             {% for exhibit in exhibits %}
                 <div class="col-md-4 mb-4">
                     <div class="card">
-                        {% if {{ exhibit.thumbnail }} %}
+                        {% if exhibit.thumbnail %}
                         <img src="{{ exhibit.thumbnail.url }}" class="card-img-top" alt="{{ exhibit.title }}">
                         {% endif %}
                         <div class="card-body">
