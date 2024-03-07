@@ -6,6 +6,9 @@ media/*
 !media/uploads
 media/uploads/*
 !media/uploads/index.txt
+!media/thumbnails
+media/thumbnails/*
+!media/thumbnails/index.txt
 staticfiles/autocomplete_light/
 staticfiles/polymorphic/
 staticfiles/vendor/

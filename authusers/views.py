@@ -20,7 +20,6 @@ def login_user(request):
             return redirect(next_url)
             
         else:
-            
             messages.error(request, f"Invalid username \({username}\) or password.")
             return redirect('login')
         

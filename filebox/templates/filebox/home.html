@@ -3,19 +3,26 @@
 {% block content %}
 
 <div class="container mt-4">
-    <!-- Hero Section -->
-    <div class="jumbotron text-center">
+    <section class="jumbotron text-center">
         <h1 class="display-4">IF Collectors Toolbox</h1>
-        <p class="lead">This is a platform to manage your data</p>
+        <p class="lead">Exhibits</p>
         <hr class="my-4">
-        <p></p>
-        {% if user.is_authenticated %}
-        <a class="btn btn-primary btn-lg" href="#" role="button">Iniciar</a>
-        {% else  %}
-        <p>You need to be registered to use this application</p>
-        {% endif %}
-    </div>
-
+        <div class="row">
+            {% for exhibit in exhibits %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ exhibit.thumbnail.url }}" class="card-img-top" alt="{{ exhibit.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ exhibit.title }}</h5>
+                            <p class="card-text">{{ exhibit.description }}</p>
+                            <a href="exhibits/{{ exhibit.slug }}" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
 </div>
+
 
 {% endblock content %}

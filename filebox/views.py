@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-
+from django.views.generic import DetailView, TemplateView
+from django.contrib.auth.models import User
 from .forms import UploadForm
 from .models import UploadFile
 from CA_Django_connector.models import Project
+from exhibits.models import Exhibit
 
 from dal import autocomplete
 
@@ -48,8 +50,15 @@ class ProjectAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
-def home(request):
-    return render(request, 'filebox/home.html')
+class Home(TemplateView):
+    template_name = 'filebox/home.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['projects'] = Project.objects.all()
+        context['exhibits'] = Exhibit.objects.all()
+        return context
+    
 
 
 def upload_file(request):

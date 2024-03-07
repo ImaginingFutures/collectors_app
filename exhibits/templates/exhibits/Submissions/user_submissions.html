@@ -1,0 +1,39 @@
+{% extends 'main.html' %}
+{% load django_bootstrap5 django_bootstrap_input_group static %}
+{% block content %}
+{% load i18n %}
+{% csrf_token %}
+
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            {% if user.is_authenticated %}
+                <h1 class="card-title">Your Submissions</h1>
+                {% if not submissions %}
+                    <p>You haven't submitted anything yet.</p>
+                {% else %}
+                    <div class="list-group">
+                        {% for submission in submissions %}
+                            <div class="list-group-item mb-3">
+                                <h2 class="mb-1">{{ submission.recipe_name }}</h2>
+                                <p class="mb-1">{{ submission.recipe }}</p>
+                                <p class="mb-2">{{ submission.cultural_connections }}</p>
+                                {% if submission.media %}
+                                    <img src="{{ submission.media.url }}" class="img-fluid" alt="Image for {{ submission.recipe_name }}">
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <!-- Back to home button -->
+                <a href="{% url 'home' %}" class='btn btn-secondary mt-3'>Back to home</a>
+            {% else %}
+                <p><strong><a href="{% url 'login' %}?next={{ request.path }}">Log in to see your contributions</a></strong></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}
