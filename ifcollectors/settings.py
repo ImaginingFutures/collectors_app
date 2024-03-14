@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-@af+y)h9j@l4sli8=r+7j33y3u1!p_*kn(5w3i(g(wmmu^%le-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['172.22.139.213', '127.0.0.1', 'collectors.ifrepo.world', 'localhost', 'ifrepo.world', 'exhibits.ifrepo.world']
+ALLOWED_HOSTS = ['172.22.139.213', '127.0.0.1', '*.ifrepo.world', 'localhost']
 
 
 # Application definition
