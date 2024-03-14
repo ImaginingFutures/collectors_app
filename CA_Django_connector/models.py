@@ -28,7 +28,10 @@ class Languages(models.Model):
 class Themes(models.Model):
     
     theme = models.CharField(max_length=70)
-    history = HistoricalRecords()
+    description = models.CharField(max_length=200, blank=True, null=True)
+    
+    def __str__(self) -> str:
+        return f"{self.theme}"
 
 class Rights(models.Model):
     
@@ -37,6 +40,21 @@ class Rights(models.Model):
     license_expanded = models.CharField(max_length = 200)
     
     history = HistoricalRecords()
+
+class ExternalResource(models.Model):
+    
+    type_of_resource = models.CharField(max_length=80,
+        choices=(
+            ('web', 'Website'),
+            ('exh', 'Exhibit'),
+            ('pub', 'Publication')
+        )
+    )
+    resource_name = models.CharField(max_length=200, unique=True)
+    url = models.URLField(unique=True)
+    
+    def __str__(self) -> str:
+        return f"{self.resource_name}"
 
 class Project(models.Model):
     """
@@ -57,8 +75,13 @@ class Project(models.Model):
                                                ('further', 'Further initiatives'),
                                                ('maprojects', 'MA Projects')), default='startup')
     
+    themes = models.ManyToManyField(Themes, blank=True)
     
     users = models.ManyToManyField(User, through='administration.UserProject')
+    
+    external_resources = models.ManyToManyField(ExternalResource, blank=True)
+    
+    thumbnail = models.ImageField(upload_to='thumbnails/', help_text='Share files under 10MB', blank=True, null=True)  
     
     history = HistoricalRecords()
     

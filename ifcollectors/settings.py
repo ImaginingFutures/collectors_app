@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'import_export',
     'django_bootstrap5',
     'django_bootstrap_input_group',
     'simple_history',
@@ -54,7 +55,7 @@ INSTALLED_APPS = [
     'filebox',
     'administration',
     'exhibits',
-    'CA_Django_connector',
+    'CA_Django_connector'
 ]
 
 MIDDLEWARE = [
