@@ -9,9 +9,8 @@ media/uploads/*
 !media/thumbnails
 media/thumbnails/*
 !media/thumbnails/index.txt
-staticfiles/autocomplete_light/
-staticfiles/polymorphic/
-staticfiles/vendor/
+staticfiles/*
+!staticfiles/ifcollectors
 0*.py
 *.log
 t.py

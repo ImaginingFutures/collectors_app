@@ -26,35 +26,42 @@ function attachFormSubmitListener(formId, submitUrl, selectElementId, modalId) {
             method: 'POST',
             data: formData,
             success: function(response) {
-                var selectElement = document.getElementById(selectElementId);
-                if (selectElement) {
-                    var newOption = document.createElement("option");
+                var selectElement = $(`#${selectElementId}`);
+                if (selectElement.length > 0) {
                     var value, text;
-                    
-                    // A way to deal with multiple modal forms.
-
-                    if (modalId.includes("Documento")){
-                        value = response.documento_id;  
-                        text = response.documento_name;
-                    } else if(modalId.includes("Persona")) {
-                        value = response.persona_id;
-                        text = response.persona_name;
-                    } else if(modalId.includes("Lugar")) {
-                        value = response.lugar_id;
-                        text = response.lugar_name;
-                    } else if(modalId.includes("Archivo")) {
-                        value = response.archivo_id;
-                        text = response.archivo_name;
+            
+                    // Determine the type of response and assign value and text accordingly
+                    if (modalId.includes("Participant")){
+                        value = response.id;
+                        text = response.full_name;
+                    } else if (modalId.includes("Place")) {
+                        console.log(response);
+                        value = response.id;
+                        text = response.place_name;
+                    } else if (modalId.includes("Resource")) {
+                        console.log(response);
+                        value = response.id;
+                        text = response.resource_name;
+                    } else if (modalId.includes("Theme")) {
+                        console.log(response);
+                        value = response.id;
+                        text = response.theme;
+                    } else if (modalId.includes("Keyword")) {
+                        console.log(response);
+                        value = response.id;
+                        text = response.keyword;
                     }
-                    
-                    newOption.value = value;
-                    newOption.text = text;
-
-                    selectElement.appendChild(newOption);
-                    selectElement.value = value;
+            
+                    var newOption = new Option(text, value, true, true);
+                    selectElement.append(newOption).trigger('change');
+            
+                    var currentValues = selectElement.val() || []; 
+                    currentValues.push(value); 
+                    selectElement.val(currentValues).trigger('change'); 
+            
+                    $(modalId).modal('hide');
                 }
-                $(modalId).modal('hide');
-            },
+            },            
             error: function(xhr, status, error) {
                 console.error("Error: ", status, error);
             }

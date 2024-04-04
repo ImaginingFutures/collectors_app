@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from ifcollectors.settings import MEDIA_ROOT
 from polymorphic.models import PolymorphicModel
 from simple_history.models import HistoricalRecords
 # Create your models here.
@@ -25,8 +24,8 @@ class MapExhibit(Exhibit):
     images = models.ManyToManyField('YourImageModel', related_name='galleries') """
 
 
-class Contributions(models.Model):
-    pass
+""" class Contributions(models.Model):
+    pass """
 
 class MapExhibitContribution(models.Model):
     

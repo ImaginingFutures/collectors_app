@@ -1,0 +1,282 @@
+<!-- View to update the projects information -->
+{% extends 'main.html' %}
+{% load django_bootstrap5 django_bootstrap_input_group static %}
+{% block content %}
+{% load i18n %}
+{% csrf_token %}
+
+<div class="container py-6">
+    <div class="row justify-content-center">
+        <div class="col-md-12 shadow auth-forms-container">
+            <h2 class="mb-2">Project Details</h2>
+            <!-- Project Edit Info -->
+            {% if action == 'edit' %}
+                <div class="mb-4">
+                    <p>This form is designed to check information about your project, which we will be using to put onto the <a href="https://ifrepo.world/" target="_blank"> Imagining Futures Repository</a> for your Project Pages. <br />
+                        The material included here is taken from your current Project Page on the <a href="https://imaginingfutures.world" target="_blank">Imagining Futures Website</a> which is publicly available. Please make sure you are happy with it and it is the latest information about your project.</p>
+                    <strong>Project ID:</strong> {{ form.instance.project_idno }} <br />
+                    <strong>Type of project:</strong> {{ form.instance.type_of_project }}
+                </div>
+            {% endif %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% include '_form_errors.html' %}
+
+                <div class="row mb-3">
+                    <div class="col">
+                        {% if action != 'edit' %}
+                        <label for="{{ form.project_idno.id_for_label }}" class="form-label">{{ form.project_idno.label }}</label>
+                        {% endif %}
+                        {{ form.project_idno }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        {% if action != 'edit' %}
+                        <label for="{{ form.type_of_project.id_for_label }}" class="form-label">{{ form.type_of_project.label }}</label>
+                        {% endif %}
+                        {{ form.type_of_project }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Name of your project</label>
+                        {{ form.name }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="{{ form.project_description.id_for_label }}" class="form-label">Project Description in English</label>
+                        {{ form.project_description|safe }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="{{ form.project_description_second.id_for_label }}" class="form-label">Project Description in another language</label>
+                        {{ form.project_description_second|safe }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="{{ form.participants.id_for_label }}" class="form-label">Project Leaders</label> <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Here you can search, edit, add or remove any person associated with the project."><i class="fas fa-info-circle"></i></button>
+                        {{ form.participants }}
+                        <button type="button" id="add_person" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Add a new person"><i class="fas fa-user-plus"></i></button>
+                    </div>
+
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="{{ form.country_or_region.id_for_label }}" class="form-label">Place and/or Country (or Countries) where your project took place?</label> <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Search for or add a new place."><i class="fas fa-info-circle"></i></button>
+                        {{ form.country_or_region }}
+                        <button type="button" id="add_place" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Add a new place"><i class="fas fa-map-marked-alt"></i></button>
+                    </div>
+
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="{{ form.external_resources.id_for_label }}" class="form-label">Please provide the URL if your project is on another website or another repository? We are asking for this information to create link between the Imagining Futures Repository and your project website.</label>
+                        {{ form.external_resources }}
+                        <button type="button" id="add_resource" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to add an external resource"><i class="fas fa-external-link-alt"></i></button>
+                    </div>
+
+                </div>
+
+                {% if form.current_thumbnail_url %}
+                    <div class="mb-3">
+                        <label class="form-label">Current thumbnail:</label>
+                        <div class="thumbnail-container" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to preview">
+                            
+                            <img src="{{ form.current_thumbnail_url }}" alt="Thumbnail" class="img-thumbnail" data-bs-toggle="modal" data-bs-target="#thumbnailModal">
+                            <div class="zoom-in" >
+                                <div class="zoom-overlay"><i class="fas fa-search-plus"></i></div>
+                            </div>
+                        </div>
+                        <label class="form-label">Do you want to change it?</label>
+                    </div>
+                    {% else %}
+                    <div class="mb-3">
+                        <label class="form-label">Upload a thumbnail image</label>
+                    </div>
+                {% endif %}
+                <div class="mb-3">
+                    {{ form.thumbnail }}
+                    {% if form.thumbnail.help_text %}
+                        <div class="form-text">{{ form.thumbnail.help_text }}</div>
+                    {% endif %}
+                    {% for error in form.thumbnail.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.thumbnail_rights.id_for_label }}" class="form-label">Rights of use of the image</label>
+                        {{ form.thumbnail_rights }}
+                    </div>
+                
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.thumbnail_note.id_for_label }}" class="form-label">Notes</label>
+                        {{ form.thumbnail_note }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="form-label">Select as many keywords as required to describe your project. </label>
+                    <div class="col-md-6 mb-3">
+                        {{ form.themes }}
+                        <button type="button" id="add_theme" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new term"><i class="fas fa-plus-square"></i></button>
+                    </div>
+                
+                    <div class="col-md-6 mb-3">
+                        {{ form.keywords }}
+                        <button type="button" id="add_keyword" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new term"><i class="far fa-plus-square"></i></button>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addParticipantModal" tabindex="-1" aria-labelledby="addParticipantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Dynamic form content will be loaded here -->
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addPlaceModal" tabindex="-1" aria-labelledby="addPlaceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Dynamic form content will be loaded here -->
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addResourceModal" tabindex="-1" aria-labelledby="addResourceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Dynamic form content will be loaded here -->
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addThemeModal" tabindex="-1" aria-labelledby="addThemeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Dynamic form content will be loaded here -->
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addKeywordModal" tabindex="-1" aria-labelledby="addKeywordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Dynamic form content will be loaded here -->
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal for displaying the large thumbnail -->
+<div class="modal fade" id="thumbnailModal" tabindex="-1" aria-labelledby="thumbnailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="thumbnailModalLabel">Thumbnail Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="spinner-border text-primary" role="status" id="loadingSpinner">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <img src="{{ form.current_thumbnail_url }}" alt="Thumbnail" class="img-fluid" id="thumbnailImage">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include '_cancel_warning.html' %}
+
+{{ form.media }}
+
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        bindEventToButton('add_person', '#addParticipantModal .modal-content', "{% url 'create_participant' %}", "#newParticipantForm", "{% url 'create_participant' %}", 'id_participants', '#addParticipantModal');
+        bindEventToButton('add_place', '#addPlaceModal .modal-content', "{% url 'create_place' %}", "#newPlaceForm", "{% url 'create_place' %}", 'id_country_or_region', '#addPlaceModal');
+        bindEventToButton('add_resource', '#addResourceModal .modal-content', "{% url 'create_resource' %}", "#newResourceForm", "{% url 'create_resource' %}", 'id_external_resources', '#addResourceModal');
+        bindEventToButton('add_theme', '#addThemeModal .modal-content', "{% url 'create_theme' %}", "#newThemeForm", "{% url 'create_theme' %}", 'id_themes', '#addThemeModal');
+        bindEventToButton('add_keyword', '#addKeywordModal .modal-content', "{% url 'create_keyword' %}", "#newKeywordForm", "{% url 'create_keyword' %}", 'id_keywords', '#addKeywordModal');
+    });
+    
+</script>
+
+<script>
+    // This manual initialization is made just as a workaround. For some reason, django_ckeditor_5 is not working correctly in the form :\
+    document.addEventListener('DOMContentLoaded', () => {
+        const editorConfig = {
+            
+            toolbar: ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough', 'code', 'subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'insertImage', 'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'imageUpload', '|', 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'removeFormat', 'insertTable'],
+
+        };
+    
+        ClassicEditor
+            .create(document.querySelector('#id_project_description'), editorConfig)
+            .catch(error => {
+                console.error(error);
+            });
+            
+        ClassicEditor
+            .create(document.querySelector('#id_project_description_second'), editorConfig)
+            .catch(error => {
+                console.error(error);
+            });
+    });
+    </script>
+    
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", function(event) {
+            
+            var img = document.getElementById('thumbnailImage');
+            var spinner = document.getElementById('loadingSpinner');
+            
+            if (img.complete) {
+                spinner.style.display = 'none';
+            } else {
+                img.onload = function() {
+                    spinner.style.display = 'none';
+                };
+            }
+        });
+        </script>
+
+{% endblock content %}

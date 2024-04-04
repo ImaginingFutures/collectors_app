@@ -1,0 +1,149 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <h1 class="display-4">{{ project.name }}</h1>
+    </div>
+    <div class="row">
+        <!-- Thumbnail Column -->
+        <div class="col-md-4 mb-3">
+            {% if project.thumbnail %}
+            <div class="card thumbnail-card">
+                <div class="card-img-top-container">
+                    <a href="{{ project.thumbnail.url }}" data-lightbox="project-thumbnail" data-title="{{ project.name }}">
+                        <img src="{{ project.thumbnail.url }}" class="card-img-top img-fluid img-thumbnail-detail object-fit-contain border rounded" alt="Thumbnail for {{ project.name }}">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ project.thumbnail_rights }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <!-- Descriptions Column -->
+        <div class="col-md-8">
+            <h3>Project Description</h3>
+            <p class="lead">{{ project.project_description | safe }}</p>
+            
+            <p>{{ project.project_description_second | safe }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Project Details</h3>
+        </div>
+        <div class="card-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" id="projectDetailTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="project-leaders-tab" data-bs-toggle="tab" href="#project-leaders" role="tab" aria-controls="project-leaders" aria-selected="true">Project Leaders</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="places-tab" data-bs-toggle="tab" href="#places" role="tab" aria-controls="places" aria-selected="false">Places</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="external-resources-tab" data-bs-toggle="tab" href="#external-resources" role="tab" aria-controls="external-resources" aria-selected="false">External Resources</a>
+                </li>
+            </ul>
+    
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="project-leaders" role="tabpanel" aria-labelledby="project-leaders-tab">
+                    <ul class="list-group list-group-flush">
+                    {% for participant in project.participants.all %}
+                        <li class="list-group-item">{{ participant.full_name }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div class="tab-pane fade" id="places" role="tabpanel" aria-labelledby="places-tab">
+                    <ul class="list-group list-group-flush">
+                    {% for place in project.country_or_region.all %}
+                        <li class="list-group-item">{{ place.place_name }} ({{ place.place_type }})</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div class="tab-pane fade" id="external-resources" role="tabpanel" aria-labelledby="external-resources-tab">
+                    <ul class="list-group list-group-flush">
+                    {% for resource in project.external_resources.all %}
+                        <li class="list-group-item">
+                            <a href="{{ resource.url }}" target="_blank">{{ resource.resource_name }}</a> ({{ resource.get_type_of_resource_display }})
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <!-- Themes and Keywords in a card deck for better layout -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Themes Column -->
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Themes</h3>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for theme in project.themes.all %}
+                        <li class="list-group-item">{{ theme.theme }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+    
+            <!-- Keywords Column -->
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Themes 2</h3>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for keyword in project.keywords.all %}
+                        <li class="list-group-item">{{ keyword.keyword }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+            
+
+    <!-- Historial -->
+    <div class="card mb-3">
+        <div class="card-header" data-bs-toggle="collapse" href="#changeHistory" role="button" aria-expanded="false" aria-controls="changeHistory">
+            <i class="fas fa-history"></i> Change History:
+        </div>
+        <div class="collapse" id="changeHistory">
+            <ul class="list-group list-group-flush">
+                {% for record in history_records %}
+                    <li class="list-group-item">
+                        <i class="far fa-user"></i> {{ record.history_user }} 
+                        <span class="text-muted" style="float:right;">
+                            <i class="far fa-calendar-alt"></i> {{ record.history_date|date:"d M Y H:i:s" }}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <!-- End of historial -->
+
+</div>
+
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %}

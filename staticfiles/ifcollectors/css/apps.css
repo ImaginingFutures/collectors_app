@@ -153,3 +153,107 @@
     width: 3rem;
     height: 3rem;
 }
+
+.btn-circle {
+    width: 25px;
+    height: 25px;
+    padding: 0px;
+    border-radius: 50%;
+    font-size: 15px;
+    text-align: center;
+    line-height: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    border: none;
+}
+
+.thumbnail-container {
+	position: relative;
+	min-width: 250px;
+	max-width: 250px;
+	height: auto;
+	overflow: hidden;
+}
+
+.img-thumbnail {
+	cursor: pointer;
+	max-width: 100%;
+	max-height: 100%;
+	display: block;
+}
+
+.zoom-in {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    opacity: 0; 
+    transition: opacity 0.25s ease; 
+	pointer-events: none;
+}
+
+.zoom-overlay {
+    color: white; 
+}
+
+.thumbnail-container:hover .zoom-in {
+    opacity: 1;
+}
+
+.auth-forms-container {
+	padding: 2rem;
+	border-radius: 8px;
+	background-color: #fff; 
+}
+
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-selection__rendered {
+	width: 100%!important;
+}
+
+@media (max-width: 769px) {
+    .row .col-md-6 {
+        width: 100%;
+    }
+}
+
+/* .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+} */
+
+.django-ckeditor-widget {
+    min-height: 200px;
+	width: 100% !important;
+}
+
+.thumbnail-card {
+	width: 18rem;
+}
+
+.card-img-top-container {
+    cursor: pointer;
+    width: 100%;
+    padding-top: 75%;
+    position: relative;
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+    border: 2px solid transparent;
+}
+
+.card-img-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
