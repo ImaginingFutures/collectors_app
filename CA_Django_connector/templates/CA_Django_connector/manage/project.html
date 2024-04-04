@@ -9,6 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12 shadow auth-forms-container">
             <h2 class="mb-2">Project Details</h2>
+            {% if perms.CA_Django_connector.add_project %}
             <!-- Project Edit Info -->
             {% if action == 'edit' %}
                 <div class="mb-4">
@@ -279,4 +280,13 @@
         });
         </script>
 
+
+        {% else %}
+    
+        {% if user.is_authenticated %}
+            {% include '_no_permission.html' %}
+        {% else %}
+        {% include '_no_registered.html' %}
+        {% endif %}
+        {% endif %}
 {% endblock content %}
