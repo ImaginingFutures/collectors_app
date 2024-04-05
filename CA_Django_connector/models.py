@@ -94,6 +94,7 @@ class Project(models.Model):
     """
     Reduced model for the table ca_collections
     """
+    
     project_idno = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=200, unique=True,)
     project_description = CKEditor5Field(max_length=1000, null=True, blank=True, config_name="extends")
@@ -114,6 +115,11 @@ class Project(models.Model):
     thumbnail_note = models.CharField(max_length=250, blank=True, null=True)
     
     history = HistoricalRecords()
+    
+    class Meta:
+        permissions = [
+            ("edit_project", "Can edit project"),
+        ]
     
     def __str__(self) -> str:
         return f'{self.name}'

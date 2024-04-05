@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
+from django.contrib.contenttypes.models import ContentType
 from simple_history.models import HistoricalRecords
 from CA_Django_connector.models import Project
 
@@ -31,6 +32,15 @@ class UserProject(models.Model):
     
     def __str__(self) -> str:
         return f'{self.user} < > {self.project}'
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        content_type = ContentType.objects.get_for_model(Project)
+        perm = Permission.objects.get(codename='edit_project', content_type=content_type)
+        if self.is_lead:
+            self.user.user_permissions.add(perm)
+        else:
+            self.user.user_permissions.remove(perm)
 
 
 class NonUserProject(models.Model):

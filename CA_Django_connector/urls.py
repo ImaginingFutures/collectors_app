@@ -3,9 +3,11 @@ from django.urls import path
 from .views import (ProjectCreateView, ProjectUpdateView, ProjectTypeAutocomplete, ProjectParticipantAutocomplete,
                     ProjectParticipantCreateView, PlaceCreateView, ResourceCreateView,
                     ThemeCreateView, KeywordCreateView, ProjectDetailView,
-                    PlaceAutocomplete, ThemesAutocomplete, KeywordsAutocomplete, ResourceAutocomplete)
+                    PlaceAutocomplete, ThemesAutocomplete, KeywordsAutocomplete, ResourceAutocomplete,
+                    ProjectDashboardView)
 
 urlpatterns = [
+    path("Dashboard/projects/", ProjectDashboardView.as_view(), name="project_dashboard"),
     path("Create/participant/", ProjectParticipantCreateView.as_view(), name="create_participant"),
     path("Create/project/", ProjectCreateView.as_view(), name="create_project"),
     path("Create/place/", PlaceCreateView.as_view(), name="create_place"),

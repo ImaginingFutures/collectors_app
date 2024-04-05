@@ -1,0 +1,44 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <h1 class="display-4">Your Projects</h1>
+    </div>
+    <div class="row">
+        {% for project in projects %}
+        <!-- Project Card -->
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <!-- Optional: if project.thumbnail exists, display it -->
+                {% if project.thumbnail %}
+                <img src="{{ project.thumbnail.url }}" class="card-img-top" alt="{{ project.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.name }}</h5>
+                    <p class="card-text">{{ project.project_description|truncatewords:20 | safe  }}</p>
+                    <a href="{% url 'update_project' project.id %}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{% url 'project_detail' project.id %}" class="btn btn-secondary">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p>No projects found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %}

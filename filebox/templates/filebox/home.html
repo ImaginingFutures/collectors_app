@@ -3,8 +3,22 @@
 {% block content %}
 
 <div class="container mt-4">
+
+    <!-- Dashboard Link Card -->
+    <div class="mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Go to Dashboard</h5>
+                <p class="card-text">Access your projects and start managing your exhibits.</p>
+                <a href="{% url 'project_dashboard' %}" class="btn btn-primary">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
     <section class="jumbotron text-center">
-        <h1 class="display-4">IF Collectors Toolbox</h1>
+        {% comment %} <h1 class="display-4">IF Projects Toolbox <span class="text-muted">(α)</span></h1> {% endcomment %}
         <p class="lead">Exhibits</p>
         <hr class="my-4">
         <div class="row">

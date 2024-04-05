@@ -1,13 +1,28 @@
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.db.models import Q
 from django.http import JsonResponse
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, DetailView, UpdateView, TemplateView
+
 # Create your views here.
 from .models import (ExternalResource, Project, ProjectTypes, ProjectParticipant, Place, Themes, Keywords)
 from .forms import (ExternalResourceForm, KeywordForm, PlaceForm, ProjectForm, ProjectParticipantForm, ThemeForm)
 
 from dal import autocomplete
+
+## Dashboards
+
+class ProjectDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'CA_Django_connector/dashboard/project_manager.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['projects'] = Project.objects.filter(users=user)
+        return context
 
 ## 
 
@@ -73,8 +88,14 @@ class ProjectUpdateView(UpdateView):
     form_class = ProjectForm
     template_name = 'CA_Django_connector/manage/project.html'
     
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm('CA_Django_connector.edit_project'):
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user_has_perm_to_edit'] = True
         context['model_name'] = self.model._meta.model_name
         context['action'] = 'edit'
         return context

@@ -34,6 +34,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['172.22.139.213', '127.0.0.1', 'ifrepo.world', 'localhost', 'create.ifrepo.world']
 
+# custom url to login
+LOGIN_URL = '/collectors/users/login_user/'
 
 # Application definition
 
