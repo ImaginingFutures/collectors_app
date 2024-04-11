@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ['172.22.139.213', '127.0.0.1', 'ifrepo.world', 'localhost', 'cr
 # custom url to login
 #LOGIN_URL = '/collectors/users/login_user/'
 LOGIN_URL = '/users/login_user/'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -258,7 +259,7 @@ LOGGING = {
             'style': '{',
         },
         'simple': {
-            'format': '{levelname} {message}',
+            'format': '{asctime} {levelname} {message}',
             'style': '{',
         },
     },
