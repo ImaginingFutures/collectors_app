@@ -97,8 +97,8 @@ class Project(models.Model):
     
     project_idno = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=200, unique=True,)
-    project_description = CKEditor5Field(max_length=1000, null=True, blank=True, config_name="extends")
-    project_description_second = CKEditor5Field(max_length=1000, null=True, blank=True, config_name="extends")
+    project_description = CKEditor5Field(max_length=10000, null=True, blank=True, config_name="extends")
+    project_description_second = CKEditor5Field(max_length=10000, null=True, blank=True, config_name="extends")
     
     type_of_project = models.ForeignKey(ProjectTypes, on_delete=models.CASCADE)
     

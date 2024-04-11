@@ -132,7 +132,12 @@ class ProjectForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             self.fields['project_idno'].widget = forms.HiddenInput()
             self.fields['type_of_project'].widget = forms.HiddenInput()
+        
+        if self.instance.pk:
+            self.fields['users'].initial = self.instance.users.all()
             
+        self.fields['users'].widget = forms.MultipleHiddenInput()
+        
         if self.instance and self.instance.pk and self.instance.thumbnail:
             self.fields['thumbnail'].widget = forms.FileInput()
             self.current_thumbnail_url = self.instance.thumbnail.url

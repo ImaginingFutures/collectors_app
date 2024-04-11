@@ -15,6 +15,9 @@
                 <div class="mb-4">
                     <p>This form is designed to check information about your project, which we will be using to put onto the <a href="https://ifrepo.world/" target="_blank"> Imagining Futures Repository</a> for your Project Pages. <br />
                         The material included here is taken from your current Project Page on the <a href="https://imaginingfutures.world" target="_blank">Imagining Futures Website</a> which is publicly available. Please make sure you are happy with it and it is the latest information about your project.</p>
+                        {% if user.is_authenticated %}
+                        <p> You're accessing this form as <strong>{{ user.username }}</strong></p>
+                        {% endif %}
                     <strong>Project ID:</strong> {{ form.instance.project_idno }} <br />
                     <strong>Type of project:</strong> {{ form.instance.type_of_project }}
                 </div>
@@ -38,6 +41,15 @@
                         <label for="{{ form.type_of_project.id_for_label }}" class="form-label">{{ form.type_of_project.label }}</label>
                         {% endif %}
                         {{ form.type_of_project }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        {% if action != 'edit' %}
+                        <label for="{{ form.users.id_for_label }}" class="form-label">{{ form.users.label }}</label>
+                        {% endif %}
+                        {{ form.users }}
                     </div>
                 </div>
 

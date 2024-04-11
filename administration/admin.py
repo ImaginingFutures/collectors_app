@@ -22,7 +22,7 @@ class ProjectAdmin(ImportExportModelAdmin):
     resource_class = ProjectResource
 
 # Register your models here.
-admin.site.register(Project, ProjectAdmin)
+admin.site.register(Project, ImportExportModelAdmin)
 admin.site.register(Place, ImportExportModelAdmin)
 admin.site.register(UserProject, ImportExportModelAdmin)
 admin.site.register(Contributor, ImportExportModelAdmin)
