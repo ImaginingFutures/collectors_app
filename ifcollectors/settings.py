@@ -35,8 +35,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['172.22.139.213', '127.0.0.1', 'ifrepo.world', 'localhost', 'create.ifrepo.world']
 
 # custom url to login
-LOGIN_URL = '/collectors/users/login_user/'
-
+#LOGIN_URL = '/collectors/users/login_user/'
+LOGIN_URL = '/users/login_user/'
 # Application definition
 
 INSTALLED_APPS = [
@@ -312,3 +312,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True 
 EMAIL_HOST_USER = 'apikey'  
 EMAIL_HOST_PASSWORD = os.getenv('SMTP_API_KEY')
+DEFAULT_FROM_EMAIL = os.getenv('FROM_EMAIL', default='noreply@gmail.com')
+LOGIN_REDIRECT_URL = 'success'
