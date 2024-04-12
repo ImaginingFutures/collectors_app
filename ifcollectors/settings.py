@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'import_export',
     'django_bootstrap5',
     'django_bootstrap_input_group',
+    # forms
+    'crispy_forms',
+    'crispy_bootstrap5',
     'simple_history',
     'django_ckeditor_5',
     'authusers',
@@ -61,6 +64,10 @@ INSTALLED_APPS = [
     'exhibits',
     'CA_Django_connector'
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
