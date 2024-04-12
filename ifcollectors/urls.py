@@ -24,7 +24,7 @@ urlpatterns = [
     path("", include("filebox.urls")),
     path("", include("exhibits.urls")),
     path("", include('CA_Django_connector.urls')),
-    path('users/', include('django.contrib.auth.urls')), 
+    path('users/', include('django.contrib.auth.urls')),
     path("users/", include("authusers.urls")),
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
 ] 
