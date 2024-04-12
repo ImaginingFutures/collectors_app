@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'import_export',
     'django_bootstrap5',
     'django_bootstrap_input_group',
+    # forms
+    'crispy_forms',
+    'crispy_bootstrap5',
     'simple_history',
     'django_ckeditor_5',
     'authusers',
@@ -61,6 +64,10 @@ INSTALLED_APPS = [
     'exhibits',
     'CA_Django_connector'
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -307,8 +314,7 @@ AUTHENTICATION_BACKENDS = [
 
 # Email config
 
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
 EMAIL_HOST = 'smtp.sendgrid.net' 
 EMAIL_PORT = 587 
 EMAIL_USE_TLS = True 
@@ -316,4 +322,3 @@ EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.getenv('SMTP_API_KEY')
 DEFAULT_FROM_EMAIL = os.getenv('FROM_EMAIL', default='noreply@gmail.com')
 LOGIN_REDIRECT_URL = 'success'
-EMAIL_FILE_PATH = '/tmp'
