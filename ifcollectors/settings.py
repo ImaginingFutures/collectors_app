@@ -53,9 +53,6 @@ INSTALLED_APPS = [
     'import_export',
     'django_bootstrap5',
     'django_bootstrap_input_group',
-    # forms
-    'crispy_forms',
-    'crispy_bootstrap5',
     'simple_history',
     'django_ckeditor_5',
     'authusers',
