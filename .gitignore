@@ -9,6 +9,9 @@ media/uploads/*
 !media/thumbnails
 media/thumbnails/*
 !media/thumbnails/index.txt
+!media/images
+media/uploads/*
+!media/images/index.txt
 staticfiles/*
 !staticfiles/ifcollectors
 0*.py
