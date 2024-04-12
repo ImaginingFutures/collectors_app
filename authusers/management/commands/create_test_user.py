@@ -2,6 +2,7 @@ import re
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.utils.crypto import get_random_string
 
 class Command(BaseCommand):
     help = 'Create a test user without a password'
@@ -18,10 +19,10 @@ class Command(BaseCommand):
 
         username = email  # Using email as username for simplicity
 
-        # Create user without setting password
+        password = get_random_string()
         user, created = User.objects.get_or_create(email=email, username=username)
         if created:
-            user.set_unusable_password()
+            user.set_password(password)
             user.save()
             self.stdout.write(self.style.SUCCESS(f'Successfully created test user: {email}'))
         else:

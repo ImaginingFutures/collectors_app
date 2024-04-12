@@ -22,7 +22,7 @@ def login_user(request):
             
         else:
             messages.error(request, f"Invalid username \({username}\) or password.")
-            return redirect('login_user')
+            return redirect('login')
         
     else:
         next_url = request.GET.get('next', 'home')
