@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth  import authenticate, login, logout
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.contrib import messages
 from .forms import RegisterUserForm
+from .utils import send_password_reset_email 
 
 import logging
 
@@ -64,3 +65,13 @@ def register_user(request):
         form = RegisterUserForm()
         next_url = request.GET.get('next', 'home')
         return render(request, 'authusers/register.html', {'form': form, 'next': next_url})
+    
+
+def password_reset_request(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
+            send_password_reset_email(request, user)
+            return render(request, 'registration/password_reset_done.html')
+    return render(request, 'registration/password_reset_form.html')

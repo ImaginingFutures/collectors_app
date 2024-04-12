@@ -322,3 +322,5 @@ EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.getenv('SMTP_API_KEY')
 DEFAULT_FROM_EMAIL = os.getenv('FROM_EMAIL', default='noreply@gmail.com')
 LOGIN_REDIRECT_URL = 'success'
+DEFAULT_HTTP_PROTOCOL = 'https'
+DEFAULT_DOMAIN = 'create.ifrepo.world'
