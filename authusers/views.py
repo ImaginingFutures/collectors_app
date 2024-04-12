@@ -21,7 +21,7 @@ logger = logging.getLogger("ifcollectors")
 
 class SignUpView(CreateView):
     form_class = RegisterUserForm 
-    template_name = 'authusers/login.html'
+    template_name = 'authusers/register.html'
     success_url = reverse_lazy('check_email')
 
     def form_valid(self, form):
