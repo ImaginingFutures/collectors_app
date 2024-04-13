@@ -238,6 +238,53 @@
 .thumbnail-card {
 	width: 18rem;
 }
+
+.page-title {
+	padding-bottom: 1rem;
+}
+
+
+.info-section {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+}
+
+.info-lead {
+    font-size: 1.1em; /* Slightly larger text for better readability */
+    color: #333; /* Darker text for better contrast */
+    line-height: 1.6; /* Increased line height for easier reading */
+}
+
+.user-section {
+    background-color: #e9ecef;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: left;
+}
+
+.user-info {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.project-info {
+    font-size: 0.95em;
+    color: #444;
+}
+
+.project-info strong {
+    color: #000;
+}
+
+.rights-icon {
+	width: 88px; 
+	height: auto; 
+	margin-right: 20px;
+}
+
 /* 
 .card-img-top-container {
     cursor: pointer;

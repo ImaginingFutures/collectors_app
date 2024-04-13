@@ -48,6 +48,8 @@ class Rights(models.Model):
     license = models.CharField(max_length=100)
     license_abreviation = models.CharField(max_length=20)
     license_expanded = models.CharField(max_length = 600)
+    canonical_url = models.URLField(unique=True, null=True)
+    icon_url = models.URLField(unique=True, null=True)
     
     def __str__(self) -> str:
         return f"({self.license_abreviation}) {self.license}"

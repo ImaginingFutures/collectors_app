@@ -8,19 +8,22 @@
 <div class="container py-6">
     <div class="row justify-content-center">
         <div class="col-md-12 shadow auth-forms-container">
-            <h2 class="mb-2">Project Details</h2>
+            <h2 class="mb-2 page-title">Project Details</h2>
             {% if user_has_perm_to_edit %}
             <!-- Project Edit Info -->
             {% if action == 'edit' %}
-                <div class="mb-4">
-                    <p>This form is designed to check information about your project, which we will be using to put onto the <a href="https://ifrepo.world/" target="_blank"> Imagining Futures Repository</a> for your Project Pages. <br />
-                        The material included here is taken from your current Project Page on the <a href="https://imaginingfutures.world" target="_blank">Imagining Futures Website</a> which is publicly available. Please make sure you are happy with it and it is the latest information about your project.</p>
-                        {% if user.is_authenticated %}
-                        <p> You're accessing this form as <strong>{{ user.username }}</strong></p>
-                        {% endif %}
-                    <strong>Project ID:</strong> {{ form.instance.project_idno }} <br />
+            <div class="info-section text-center">
+                <p class="info-lead">This form is designed to check information about your project, which will be used on the <a href="https://ifrepo.world/" target="_blank">Imagining Futures Repository</a> for your Project Pages. The material included here is taken from your current Project Page on the <a href="https://imaginingfutures.world" target="_blank">Imagining Futures Website</a>, which is publicly available. Please ensure it accurately reflects your project's latest developments.</p>
+            </div>
+            <div class="user-section mb-4">
+                {% if user.is_authenticated %}
+                <p class="user-info">You're accessing this form as <strong>{{ user.username }}</strong>.</p>
+                {% endif %}
+                <p class="project-info">
+                    <strong>Project ID:</strong> {{ form.instance.project_idno }}<br />
                     <strong>Type of project:</strong> {{ form.instance.type_of_project }}
-                </div>
+                </p>
+            </div>
             {% endif %}
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -69,34 +72,34 @@
 
                 <div class="row mb-3">
                     <div class="col">
-                        <label for="{{ form.project_description_second.id_for_label }}" class="form-label">Project Description in another language</label>
+                        <label for="{{ form.project_description_second.id_for_label }}" class="form-label">Project Description in Another Language <span class="text-muted">(optional)</span></label>
                         {{ form.project_description_second|safe }}
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col">
-                        <label for="{{ form.participants.id_for_label }}" class="form-label">Project Leaders</label> <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Here you can search, edit, add or remove any person associated with the project."><i class="fas fa-info-circle"></i></button>
+                        <label for="{{ form.participants.id_for_label }}" class="form-label">Names of Project Leaders</label> <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Persons who were in charge of lead the project."><i class="fas fa-info-circle"></i></button>
                         {{ form.participants }}
-                        <button type="button" id="add_person" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Add a new person"><i class="fas fa-user-plus"></i></button>
+                        <button type="button" id="add_person" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Add a new person"><i class="fas fa-user-plus"></i></button>  <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Here you can include persons that are not in the database."><i class="fas fa-info-circle"></i></button>
                     </div>
 
                 </div>
 
                 <div class="row mb-3">
                     <div class="col">
-                        <label for="{{ form.country_or_region.id_for_label }}" class="form-label">Place and/or Country (or Countries) where your project took place?</label> <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Search for or add a new place."><i class="fas fa-info-circle"></i></button>
+                        <label for="{{ form.country_or_region.id_for_label }}" class="form-label">Places and/or Country (or Countries) where your project took place</label> <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Search for or include a new place."><i class="fas fa-info-circle"></i></button>
                         {{ form.country_or_region }}
-                        <button type="button" id="add_place" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Add a new place"><i class="fas fa-map-marked-alt"></i></button>
+                        <button type="button" id="add_place" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Add a new place"><i class="fas fa-map-marked-alt"></i></button> <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Here you can add a new place if it's not in the list."><i class="fas fa-info-circle"></i></button>
                     </div>
 
                 </div>
 
                 <div class="row mb-3">
                     <div class="col">
-                        <label for="{{ form.external_resources.id_for_label }}" class="form-label">Please provide the URL if your project is on another website or another repository? We are asking for this information to create link between the Imagining Futures Repository and your project website.</label>
+                        <label for="{{ form.external_resources.id_for_label }}" class="form-label">Please provide the URL if your project is on another website or another repository. <span class="text-muted">We are asking for this information to create link between the Imagining Futures Repository and your project website.</span></label>
                         {{ form.external_resources }}
-                        <button type="button" id="add_resource" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to add an external resource"><i class="fas fa-external-link-alt"></i></button>
+                        <button type="button" id="add_resource" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to add an external resource"><i class="fas fa-external-link-alt"></i></button><button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to add your websites or repositories information."><i class="fas fa-info-circle"></i></button>
                     </div>
 
                 </div>
@@ -115,7 +118,7 @@
                     </div>
                     {% else %}
                     <div class="mb-3">
-                        <label class="form-label">Upload a thumbnail image</label>
+                        <label class="form-label">Upload a new thumbnail image</label>
                     </div>
                 {% endif %}
                 <div class="mb-3">
@@ -131,25 +134,29 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="{{ form.thumbnail_rights.id_for_label }}" class="form-label">Rights of use of the image</label>
+                        <a href="{% url 'rights_browse' %}" type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Know more about the rights and licenses."><i class="fas fa-question-circle"></i></a>
                         {{ form.thumbnail_rights }}
                     </div>
+                    
                 
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.thumbnail_note.id_for_label }}" class="form-label">Notes</label>
+                        <label for="{{ form.thumbnail_note.id_for_label }}" class="form-label">Notes to the Rights</label> <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="In case you want to expand the rights standard notice."><i class="fas fa-info-circle"></i></button>
                         {{ form.thumbnail_note }}
                     </div>
                 </div>
 
                 <div class="row">
-                    <label class="form-label">Select as many keywords as required to describe your project. </label>
+                    <label class="form-label">Select as many keywords as required to describe your project. </label> 
                     <div class="col-md-6 mb-3">
+                        <label class="form-label"></label>
                         {{ form.themes }}
-                        <button type="button" id="add_theme" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new term"><i class="fas fa-plus-square"></i></button>
+                        <button type="button" id="add_theme" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new keyword"><i class="fas fa-plus-square"></i></button>
                     </div>
                 
                     <div class="col-md-6 mb-3">
+                        <label class="form-label"></label>
                         {{ form.keywords }}
-                        <button type="button" id="add_keyword" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new term"><i class="far fa-plus-square"></i></button>
+                        <button type="button" id="add_keyword" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new keyword"><i class="far fa-plus-square"></i></button>
                     </div>
                 </div>
 
@@ -258,7 +265,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const editorConfig = {
             
-            toolbar: ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough', 'code', 'subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', '|', 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'removeFormat', 'insertTable'],
+            toolbar: ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough', 'subscript', 'superscript', 'highlight', '|', 'sourceEditing', 'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', '|', 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'removeFormat', 'insertTable'],
 
         };
     

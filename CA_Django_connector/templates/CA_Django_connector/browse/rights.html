@@ -1,0 +1,42 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <h1 class="display-4">Rights</h1>
+    </div>
+    <div class="row">
+        <div class="info-section text-center">
+            <p class="info-lead">{% blocktrans %}The Imagining Futures Repository has adopted two complementary frameworks to define the usage rights for materials hosted on our platform: <a href="https://creativecommons.org/">the Creative Commons initiative</a> and <a href="https://rightsstatements.org/">RightsStatements.org</a>. While Creative Commons licenses are typically sufficient for most materials, there are instances, such as records not yet in the public domain without clear attribution, where these licenses may not be appropriate. To assist in the informed selection of licenses, public domain marks, or rights statements, we provide a comprehensive list of these frameworks with their corresponding canonical URLs for further exploration.{% endblocktrans %}</p>
+        </div>
+        <div class="list-group">
+            {% for object in object_list %}
+            <div class="d-flex align-items-start mb-3">
+                <img src="{{ object.icon_url }}" alt="{{ object.license_abreviation }} Icon" class="rights-icon">
+                <div>
+                    <h5 class="mb-1">{{ object.license_abreviation }}</h5>
+                    <p><strong>{{ object.license }}</strong></p>
+                    <p>{{ object.license_expanded }}</p>
+                    <p><a href="{{ object.canonical_url }}" target="_blank">{{ object.canonical_url }} <i class="fas fa-external-link-alt"></i></a></p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center">
+                <p>No items in this list.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+</div>
+
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %}

@@ -5,10 +5,11 @@ from django.db import models
 from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, DetailView, UpdateView, TemplateView
+from django.views.generic import CreateView, DetailView, UpdateView, TemplateView, ListView
 
 # Create your views here.
-from .models import (ExternalResource, Project, ProjectTypes, ProjectParticipant, Place, Themes, Keywords)
+from .models import (ExternalResource, Project, ProjectTypes, ProjectParticipant, Place, Themes, Keywords,
+                     Rights)
 from .forms import (ExternalResourceForm, KeywordForm, PlaceForm, ProjectForm, ProjectParticipantForm, ThemeForm)
 
 from dal import autocomplete
@@ -55,6 +56,18 @@ class ResourceAutocomplete(autocomplete.Select2QuerySetView):
         qs = ExternalResource.objects.all()
         if self.q:
             qs = qs.filter(resource_name__icontains=self.q)
+            
+        return qs
+
+class RightsAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Rights.objects.all().order_by('license')
+        if self.q:
+            
+            qs = qs.filter(
+                Q(license__icontains=self.q) |
+                Q(license_abreviation__icontains=self.q)
+                )
             
         return qs
 
@@ -128,6 +141,8 @@ class ProjectDetailView(DetailView):
         context['history_records'] = history_records
         
         return context
+
+
 
 class ProjectParticipantCreateView(CreateView):
     model = ProjectParticipant
@@ -294,3 +309,8 @@ class KeywordCreateView(CreateView):
 
         # For non-AJAX requests, redirect as usual
         return super().form_valid(form)
+
+
+class RightsBrowse(ListView):
+    model = Rights
+    template_name = "CA_Django_connector/browse/rights.html"

@@ -1,7 +1,8 @@
 from django import forms
 from django_ckeditor_5.widgets import CKEditor5Widget
 from dal import autocomplete
-from .models import ExternalResource, Keywords, Place, Project, ProjectTypes, ProjectParticipant, Themes
+from .models import (ExternalResource, Keywords, Place, Project, ProjectTypes, ProjectParticipant, Themes,
+                     Rights)
 
 class ProjectParticipantForm(forms.ModelForm):
     class Meta:
@@ -125,6 +126,12 @@ class ProjectForm(forms.ModelForm):
         label="Keywords"
     )
     
+    thumbnail_rights = forms.ModelChoiceField(
+        queryset= Rights.objects.all(),
+        required=True,
+        widget=autocomplete.ModelSelect2(url='rights-autocomplete'),
+        label="Rights"
+    )
     
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
