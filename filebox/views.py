@@ -55,8 +55,12 @@ class Home(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        user = self.request.user
+        
         context['projects'] = Project.objects.all()
         context['exhibits'] = Exhibit.objects.all()
+
         return context
     
 
