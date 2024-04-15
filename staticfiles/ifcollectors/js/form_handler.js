@@ -56,7 +56,9 @@ function attachFormSubmitListener(formId, submitUrl, selectElementId, modalId) {
                     selectElement.append(newOption).trigger('change');
             
                     var currentValues = selectElement.val() || []; 
-                    currentValues.push(value); 
+                    if (Array.isArray(currentValues)){
+                        currentValues.push(value);
+                    }
                     selectElement.val(currentValues).trigger('change'); 
             
                     $(modalId).modal('hide');
