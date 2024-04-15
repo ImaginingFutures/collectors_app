@@ -19,7 +19,7 @@ class Command(BaseCommand):
 
         username = email  # Using email as username for simplicity
 
-        password = get_random_string()
+        password = get_random_string(length=10)
         user, created = User.objects.get_or_create(email=email, username=username)
         if created:
             user.set_password(password)
