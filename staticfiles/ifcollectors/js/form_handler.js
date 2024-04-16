@@ -65,7 +65,7 @@ function attachFormSubmitListener(formId, submitUrl, selectElementId, modalId) {
                 }
             },            
             error: function(xhr, status, error) {
-                console.error("Error: ", status, error);
+                console.error("Error: ", status, error, xhr);
             }
         });
     });

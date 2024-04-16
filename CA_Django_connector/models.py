@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from simple_history.models import HistoricalRecords
 from django_ckeditor_5.fields import CKEditor5Field
@@ -29,16 +30,28 @@ class Languages(models.Model):
     
 class Themes(models.Model):
     
-    theme = models.CharField(max_length=70)
+    theme = models.CharField(max_length=70, unique=True, blank=True)
     description = models.CharField(max_length=200, blank=True, null=True)
+    
+    def save(self, *args, **kwargs):
+        self.theme = self.theme.lower() if self.theme else ''
+        if Themes.objects.filter(theme=self.theme).exists():
+            raise ValidationError(f"This term '{self.theme}' already exists.")
+        super().save(*args, **kwargs)
     
     def __str__(self) -> str:
         return f"{self.theme}"
 
 class Keywords(models.Model):
     
-    keyword = models.CharField(max_length=70)
+    keyword = models.CharField(max_length=70, unique=True, blank=True)
     description = models.CharField(max_length=200, blank=True, null=True)
+    
+    def save(self, *args, **kwargs):
+        self.keyword = self.keyword.lower() if self.keyword else ''
+        if Keywords.objects.filter(keyword=self.keyword).exists():
+            raise ValidationError(f"This term '{self.keyword}' already exists.")
+        super().save(*args, **kwargs)
     
     def __str__(self) -> str:
         return f"{self.keyword}"
