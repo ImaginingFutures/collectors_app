@@ -8,12 +8,15 @@
 <div class="container py-6">
     <div class="row justify-content-center">
         <div class="col-md-12 shadow auth-forms-container">
-            <h2 class="mb-2 page-title">Project Details</h2>
+            <h2 class="mb-3 page-title">Project Details</h2>
             {% if user_has_perm_to_edit %}
             <!-- Project Edit Info -->
             {% if action == 'edit' %}
             <div class="info-section text-center">
                 <p class="info-lead">This form is designed to check information about your project, which will be used on the <a href="https://ifrepo.world/" target="_blank">Imagining Futures Repository</a> for your Project Pages. The material included here is taken from your current Project Page on the <a href="https://imaginingfutures.world" target="_blank">Imagining Futures Website</a>, which is publicly available. Please ensure it accurately reflects your project's latest developments.</p>
+            </div>
+            <div class="mb-4">
+                <p><i class="fas fa-info-circle"></i> This form simplifies updates by automatically filling in fields with the latest information you or your team provided to the Imagining Futures team or updated previously. Many fields feature dropdown menus making it easier to select available options. Feel free to adjust any details to ensure the information is up-to-date and accurate.</p>
             </div>
             <div class="user-section mb-4">
                 {% if user.is_authenticated %}
@@ -148,15 +151,15 @@
                 <div class="row">
                     <label class="form-label">Select or add keywords to describe your project. </label> 
                     <div class="col-md-6 mb-3">
-                        <label class="form-label"></label>
+                        <label for="{{ form.themes.id_for_label }}" class="form-label"></label>
                         {{ form.themes }}
-                        <button type="button" id="add_theme" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new keyword"><i class="fas fa-plus-square"></i></button>
+                        <button type="button" id="add_theme" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new keyword in this group"><i class="fas fa-plus-square"></i></button>
                     </div>
                 
                     <div class="col-md-6 mb-3">
-                        <label class="form-label"></label>
+                        <label for="{{ form.keywords.id_for_label }}" class="form-label"></label>
                         {{ form.keywords }}
-                        <button type="button" id="add_keyword" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new keyword"><i class="far fa-plus-square"></i></button>
+                        <button type="button" id="add_keyword" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to create a new keyword in this group"><i class="far fa-plus-square"></i></button>
                     </div>
                 </div>
 

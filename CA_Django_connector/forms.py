@@ -87,21 +87,21 @@ class ProjectForm(forms.ModelForm):
     type_of_project = forms.ModelChoiceField(
         queryset=ProjectTypes.objects.all(),
         required=False,
-        widget=autocomplete.ModelSelect2(url='typeproject-autocomplete'),
+        widget=autocomplete.ModelSelect2(url='typeproject-autocomplete', attrs={'placeholder': 'Select project type'}),
         label='Project Type'
     )
     
     participants = forms.ModelMultipleChoiceField(
         queryset=ProjectParticipant.objects.all(),
         required=True,
-        widget=autocomplete.ModelSelect2Multiple(url='projectparticipant-autocomplete'),
+        widget=autocomplete.ModelSelect2Multiple(url='projectparticipant-autocomplete', attrs={'placeholder': 'Select or add project leaders'}),
         label='Project Leaders'
     )
     
     country_or_region = forms.ModelMultipleChoiceField(
         queryset=Place.objects.all(),
         required=False,
-        widget=autocomplete.ModelSelect2Multiple(url='place-autocomplete'),
+        widget=autocomplete.ModelSelect2Multiple(url='place-autocomplete', attrs={'placeholder': 'Select place'}),
         label="Place"
     )
     
@@ -115,21 +115,21 @@ class ProjectForm(forms.ModelForm):
     themes = forms.ModelMultipleChoiceField(
         queryset=Themes.objects.all(),
         required=True,
-        widget=autocomplete.ModelSelect2Multiple(url='themes-autocomplete'),
+        widget=autocomplete.ModelSelect2Multiple(url='themes-autocomplete', attrs={'placeholder': 'Select general themes'}),
         label="Themes"
     )
     
     keywords = forms.ModelMultipleChoiceField(
         queryset=Keywords.objects.all(),
         required=True,
-        widget=autocomplete.ModelSelect2Multiple(url='keywords-autocomplete'),
+        widget=autocomplete.ModelSelect2Multiple(url='keywords-autocomplete', attrs={'placeholder': 'Select more specific themes'}),
         label="Keywords"
     )
     
     thumbnail_rights = forms.ModelChoiceField(
         queryset= Rights.objects.all(),
         required=True,
-        widget=autocomplete.ModelSelect2(url='rights-autocomplete'),
+        widget=autocomplete.ModelSelect2(url='rights-autocomplete', attrs={'placeholder': 'Select rights'}),
         label="Rights"
     )
     
@@ -150,10 +150,14 @@ class ProjectForm(forms.ModelForm):
             self.current_thumbnail_url = self.instance.thumbnail.url
         else:
             self.current_thumbnail_url = None
-            
+        
         for field_name, field in self.fields.items():
             if isinstance(field, forms.fields.TypedChoiceField):
                 field.widget.attrs['class'] = 'form-select'
             else:
                 field.widget.attrs['class'] = 'form-control'
+        
+        
+        self.fields['themes'].widget.attrs = {'data-placeholder': 'Select general keywords', 'class': 'form-select'}
+        self.fields['keywords'].widget.attrs = {'data-placeholder': 'Select specific keywords', 'class': 'form-select'}
                 
