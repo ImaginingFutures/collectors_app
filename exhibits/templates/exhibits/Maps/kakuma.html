@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+{% load django_bootstrap5 django_bootstrap_input_group static %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="exhibit-header my-4">
+  <h1>The Ways Forward</h2>
+  <h3>Gerawork Teferra</h3>
+  </div>
+
+  <div id="recordContainer"></div>
+
+</div>
+
+<script>
+    // Example data loading (replace with AJAX later)
+    const records = [
+        { id: "UFC00340001", title: "My life to find meaning in Kakuma Camp", description: "The story portrays the educational environment of the camp based on his firsthand experience as a teacher and facilitator of learning and shows its connection to a meaningful life.", file: "{% static 'ifcollectors/pdf/UFC00340001.pdf' %}"},
+        {id: "UFC00340002", title: "My Education", description: "The story shows struggle to bring family togther, the value of education, and the unpredictable nature of returning back to home", file: "{% static 'ifcollectors/pdf/UFC00340002.pdf' %}"},
+        {id: "UFC00340003", title: "My Education", description: "The story shows how frequent learning is intrupted for various reasons and ways student thrive to learn and complete.", file: "{% static 'ifcollectors/pdf/UFC00340003.pdf' %}"},
+        {id: "UFC00340004", title: "My Second home", description: "The story informs the camp life struggle to meet basic needs and learn at the same time, the power of perseverence, and becoming wholstic to make life better.", file: "{% static 'ifcollectors/pdf/UFC00340004.pdf' %}"},
+        {id: "UFC00340005", title: "My Education Journey in Kakuma", description: "The story narrates the aspiration of a student to be the firs tin class, but languge becomes an obstacle, solving that was also not enough. According to the narration other life challenges like health, school fees and close support matters a lot.", file: "{% static 'ifcollectors/pdf/UFC00340005.pdf' %}"},
+        {id: "UFC00340006", title: "Food Shortage", description: "The story tells how the food relief services look like over the years, its impacts on health especially for minors and peoples' struggle to have alternative means.", file: "{% static 'ifcollectors/pdf/UFC00340006.pdf' %}"},
+    ];
+    
+    function loadRecords() {
+        const container = document.getElementById('recordContainer');
+        records.forEach(record => {
+            const recordDiv = document.createElement('div');
+            recordDiv.innerHTML = `<h2>${record.title}</h2><p>${record.description}</p>`;
+            container.appendChild(recordDiv);
+        });
+    }
+    
+    window.onload = loadRecords;
+    </script>
+
+{% endblock content %}

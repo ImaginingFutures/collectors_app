@@ -1,12 +1,13 @@
 from django.urls import path
 
-from .views import (ProjectCreateView, ProjectUpdateView, ProjectTypeAutocomplete, ProjectParticipantAutocomplete,
+from .views import (FileDeleteView, Home, ProjectAutocomplete, ProjectCreateView, ProjectFilesView, ProjectUpdateView, ProjectTypeAutocomplete, ProjectParticipantAutocomplete,
                     ProjectParticipantCreateView, PlaceCreateView, ResourceCreateView, RightsBrowse,
                     ThemeCreateView, KeywordCreateView, ProjectDetailView,
                     PlaceAutocomplete, ThemesAutocomplete, KeywordsAutocomplete, ResourceAutocomplete,
-                    ProjectDashboardView, RightsAutocomplete)
+                    ProjectDashboardView, RightsAutocomplete, upload_file)
 
 urlpatterns = [
+    path("", Home.as_view(), name="home"),
     path("Dashboard/projects/", ProjectDashboardView.as_view(), name="project_dashboard"),
     path("Create/participant/", ProjectParticipantCreateView.as_view(), name="create_participant"),
     path("Create/project/", ProjectCreateView.as_view(), name="create_project"),
@@ -23,5 +24,10 @@ urlpatterns = [
     path("themes-autocomplete", ThemesAutocomplete.as_view(), name="themes-autocomplete"),
     path("rights-autocomplete", RightsAutocomplete.as_view(), name="rights-autocomplete"),
     path("keywords-autocomplete", KeywordsAutocomplete.as_view(), name="keywords-autocomplete"),
-    path("resource-autocomplete", ResourceAutocomplete.as_view(), name='resource-autocomplete')
+    path("resource-autocomplete", ResourceAutocomplete.as_view(), name='resource-autocomplete'),
+    path("upload/", upload_file, name='upload'),
+    path('upload/<int:project_id>/', upload_file, name='upload_file'),
+    path("Files/project/<int:pk>/", ProjectFilesView.as_view(), name='project_files'),
+    path("projects-autocomplete/", ProjectAutocomplete.as_view(), name='projects-autocomplete'),
+    path('file/delete/<int:pk>/', FileDeleteView.as_view(), name='file_delete'),
 ]

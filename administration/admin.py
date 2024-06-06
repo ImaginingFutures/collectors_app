@@ -4,7 +4,7 @@ from CA_Django_connector.models import (Place, Project, Themes, ExternalResource
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from filebox.models import UploadFile
+from CA_Django_connector.models import UploadFile
 from exhibits.models import Exhibit, MapExhibit, MapExhibitContribution
 
 class ProjectResource(resources.ModelResource):

@@ -12,6 +12,9 @@ from django.views.generic import CreateView, DetailView
 def testing_map(request):
     return render(request, 'exhibits/Maps/syria_recipes_and_cultures.html') 
 
+def kakuma(request):
+    return render(request, 'exhibits/Maps/kakuma.html') 
+
 class MapExhibitContributionCreateView(CreateView):
     model = MapExhibitContribution
     form_class = MapExhibitContributionForm

@@ -1,18 +1,40 @@
 from django.urls import reverse_lazy
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, DetailView, UpdateView, TemplateView, ListView
+from django.views.generic import CreateView, DetailView, UpdateView, TemplateView, ListView, DeleteView
+
+from exhibits.models import Exhibit
 
 # Create your views here.
 from .models import (ExternalResource, Project, ProjectTypes, ProjectParticipant, Place, Themes, Keywords,
-                     Rights)
-from .forms import (ExternalResourceForm, KeywordForm, PlaceForm, ProjectForm, ProjectParticipantForm, ThemeForm)
+                     Rights, UploadFile)
+from .forms import (ExternalResourceForm, KeywordForm, PlaceForm, ProjectForm, ProjectParticipantForm, ThemeForm, UploadForm)
 
 from dal import autocomplete
+
+import logging
+
+logger = logging.getLogger("ifcollectors")
+
+## Home
+
+class Home(TemplateView):
+    template_name = 'CA_Django_connector/home.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        user = self.request.user
+        
+        context['projects'] = Project.objects.all()
+        context['exhibits'] = Exhibit.objects.all()
+
+        return context
 
 ## Dashboards
 
@@ -26,6 +48,14 @@ class ProjectDashboardView(LoginRequiredMixin, TemplateView):
         return context
 
 ## 
+
+class ProjectAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Project.objects.all()
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+            
+        return qs
 
 class ProjectTypeAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -314,3 +344,69 @@ class KeywordCreateView(CreateView):
 class RightsBrowse(ListView):
     model = Rights
     template_name = "CA_Django_connector/browse/rights.html"
+    
+    
+## Files management
+
+TYPES = [
+    'image/jpeg', 'image/png', 'image/tiff', 'image/gif', 'image/bmp', 'image/webp', 
+    'video/mp4', 'video/webm', 'video/ogg', 'audio/mpeg', 'audio/mp4', 'audio/ogg', 
+    'audio/wav', 'application/pdf', 'application/msword', 
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+    'application/vnd.ms-excel', 
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+    'application/vnd.ms-powerpoint', 
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation', 
+    'text/plain', 'text/csv', 'text/xml'
+]
+
+def validate_files(uploaded_file, allowed_types=TYPES):
+    if uploaded_file.content_type not in allowed_types:
+        return False, "File type is not allowed."
+    return True, 'Valid'
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadForm(request.POST)
+        if form.is_valid():
+            project = form.cleaned_data['project']
+            
+            for key in request.FILES:
+                file = request.FILES[key]
+                logger.debug(f'File to upload: {file}')
+                is_valid, message = validate_files(file)
+                if not is_valid:
+                    return JsonResponse({'error': message}, status=400)
+                
+                UploadFile.objects.create(project=project, file=file)
+            return redirect('home')
+        else:
+            logger.debug(f'Form errors: {form.errors}')
+    else:
+        form = UploadForm()
+            
+    return render(request, 'CA_Django_connector/files/upload.html', {'form': form})
+
+
+class ProjectFilesView(ListView):
+    model = UploadFile
+    template_name = 'CA_Django_connector/files/project.html'
+    context_object_name = 'files'
+
+    def get_queryset(self):
+        self.project = get_object_or_404(Project, id=self.kwargs['pk'])
+        return UploadFile.objects.filter(project=self.project)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['project'] = self.project
+        return context
+    
+
+class FileDeleteView(DeleteView):
+    model = UploadFile
+    template_name = 'dbgestor/Base/confirm_delete.html'
+    success_url = reverse_lazy('project_dashboard')  
+
+    def get_success_url(self):
+        return self.request.GET.get('next', self.success_url)

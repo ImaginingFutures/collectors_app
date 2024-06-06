@@ -1,6 +1,6 @@
 
 .navbar {
-    background-color: #171f5c;
+    background-color: #1c1b1a;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -115,11 +115,6 @@
 }
 
 
-
-.select2-autocomplete .select2-container {
-    width: 100% !important; /* Adjust the width as needed */
-}
-
 #userDropdown i {
     font-size: x-large;
     color: black;
@@ -217,7 +212,11 @@
 }
 
 .select2-container--default .select2-selection {
-	height: auto!important;
+	height: 40px !important;
+}
+
+.select2-autocomplete .select2-container {
+    width: 100% !important; /* Adjust the width as needed */
 }
 
 .select2-selection__rendered {
@@ -301,6 +300,22 @@
 	width: 88px; 
 	height: auto; 
 	margin-right: 20px;
+}
+
+.upload-buttons {
+	padding-bottom: 20px;
+}
+
+.dropzone {
+	border: none;
+	padding: 0;
+}
+
+.dropzone .dz-message {
+	margin: 0px;
+	padding: 2em 0;
+	border: #aaa 1px solid;
+	border-radius: 4px;
 }
 
 /* 

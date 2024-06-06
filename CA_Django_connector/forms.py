@@ -2,7 +2,7 @@ from django import forms
 from django_ckeditor_5.widgets import CKEditor5Widget
 from dal import autocomplete
 from .models import (ExternalResource, Keywords, Place, Project, ProjectTypes, ProjectParticipant, Themes,
-                     Rights)
+                     Rights, UploadFile)
 
 class ProjectParticipantForm(forms.ModelForm):
     class Meta:
@@ -160,4 +160,17 @@ class ProjectForm(forms.ModelForm):
         
         self.fields['themes'].widget.attrs = {'data-placeholder': 'Select general keywords', 'class': 'form-select'}
         self.fields['keywords'].widget.attrs = {'data-placeholder': 'Select specific keywords', 'class': 'form-select'}
-                
+
+
+class UploadForm(forms.ModelForm):
+    class Meta:
+        model = UploadFile
+        fields = ['project']
+        
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.all(),
+        required=True,
+        widget=autocomplete.ModelSelect2(url='projects-autocomplete', attrs={'placeholder': 'Select project'}),
+        label='Project Name'
+    )
+    

@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'filebox',
     'administration',
     'exhibits',
-    'CA_Django_connector'
+    'CA_Django_connector',
+    'collected',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,90 @@
+{% extends 'main.html' %}
+{% load django_bootstrap5 django_bootstrap_input_group static %}
+{% block content %}
+{% load i18n %}
+{% csrf_token %}
+
+<div class="container py-6">
+    <div class="row justify-content-center">
+        <div class="col-md-12 shadow auth-forms-container">
+            <h2 class="mb-3 page-title">Upload Files</h2>
+            <form action="{% url 'upload' %}" method="POST" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% include '_form_errors.html' %}
+                <div class="mb-3">
+                    <label for="{{ form.project.id_for_label }}" class="form-label">{{ form.project.label }}</label>
+                    {{ form.project }}
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end upload-buttons">
+                    <a href="{% url 'project_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="submit-all">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    {% include '_cancel_warning.html' %}
+
+    {{ form.media }}
+    
+
+    <script>
+        var mediatypes = 'image/jpg, image/jpeg, image/png, image/tiff, image/gif, image/bmp, image/webp, video/mp4, video/webm, video/ogg, audio/mpeg, audio/mp3, audio/ogg, audio/wav, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, text/csv, text/xml';
+        
+        Dropzone.options.myAwesomeDropzone = {
+            paramName: "file",
+            autoProcessQueue: false,
+            uploadMultiple: true,
+            parallelUploads: 100,
+            maxFiles: 200,
+            maxFilesize: 500,
+            acceptedFiles: mediatypes,
+            init: function() {
+                console.log("Dropzone initialized.");
+                var myDropzone = this;
+        
+                // Log the added file event
+                myDropzone.on("addedfile", function(file) {
+                    console.log("File added: ", file.name);
+                });
+        
+                document.querySelector("#submit-all").addEventListener("click", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Submit button clicked.");
+                    if (myDropzone.getQueuedFiles().length > 0) {
+                        console.log("Processing queue.");
+                        myDropzone.processQueue();
+                    } else {
+                        console.log("No files in queue.");
+                        document.querySelector("#my-awesome-dropzone").submit();
+                    }
+                });
+        
+                myDropzone.on("sendingmultiple", function(file, xhr, formData) {
+                    console.log("Sending files.");
+                    formData.append("project", document.querySelector("#id_project").value);
+                    console.log("Project added to formData: ", document.querySelector("#id_project").value);
+                });
+        
+                myDropzone.on("successmultiple", function(files, response) {
+                    console.log("Files successfully uploaded.");
+                    window.location.href = "{% url 'home' %}";
+                });
+        
+                myDropzone.on("errormultiple", function(files, response) {
+                    console.log("Error uploading files: ", response);
+                    alert(response.error);
+                });
+        
+                myDropzone.on("queuecomplete", function() {
+                    console.log("All files have been uploaded.");
+                    window.location.href = "{% url 'home' %}";
+                });
+            }
+        };
+        </script>
+
+{% endblock content %}

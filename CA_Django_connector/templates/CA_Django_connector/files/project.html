@@ -1,0 +1,71 @@
+<!-- templates/CA_Django_connector/files/project.html -->
+{% extends 'main.html' %}
+{% block content %}
+{% load i18n %}
+{% csrf_token %}
+
+<div class="container py-6">
+    <h2 class="mb-3 page-title">{{ project.name }} - Uploaded Files</h2>
+    <div class="list-group">
+        {% for file in files %}
+        <a href="{{ file.file.url }}" class="list-group-item list-group-item-action">
+            {{ file.file.name }} - {{ file.pk }}
+        </a>
+        <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('{% url 'file_delete' file.pk %}');"><i class="fas fa-trash-alt" aria-label="Delete"></i></button>
+        {% empty %}
+        <p>No files uploaded for this project.</p>
+        {% endfor %}
+    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a href="{% url 'project_dashboard' %}" class="btn btn-secondary">Back to Project Dashboard</a>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">{% trans 'Confirmar borrado' %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% trans '¿Está seguro de querer borrar este elemento?' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Cancelar' %}</button>
+                <button type="button" class="btn btn-danger" id="deleteConfirmBtn">{% trans 'Borrar' %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ form.media }}
+
+<script>
+    function confirmDelete(deleteURL) {
+        $('#deleteConfirmationModal').modal('show');
+    
+        document.getElementById('deleteConfirmBtn').onclick = function() {
+            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            console.log("csrf_token");
+            console.log(csrftoken);
+            $.ajax({
+                url: deleteURL,
+                type: 'POST',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+                success: function(result) {
+                    $('#deleteConfirmationModal').modal('hide');
+                    location.reload(); 
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        };
+    }
+</script>
+
+{% endblock content %}

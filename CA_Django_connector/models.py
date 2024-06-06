@@ -139,6 +139,10 @@ class Project(models.Model):
     def __str__(self) -> str:
         return f'{self.name}'
 
+class UploadFile(models.Model):
+    project = models.ForeignKey(Project, related_name='files', on_delete=models.CASCADE)
+    file = models.FileField(upload_to='uploads/')
+
 class Records(models.Model):
     """
     Reduced model for ca_objects
@@ -154,6 +158,9 @@ class Records(models.Model):
     creator = models.ManyToManyField(User, blank=True, related_name='creators')
     rights_holders = models.ManyToManyField(User, blank=True, related_name='rights_holders')
     license = models.ForeignKey(Rights, on_delete=models.SET_DEFAULT, default=1)
-    media = models.ManyToManyField('filebox.UploadFile', blank=True)
+    media = models.ManyToManyField(UploadFile, blank=True)
     
     history = HistoricalRecords()
+
+
+    
