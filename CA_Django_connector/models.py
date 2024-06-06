@@ -142,6 +142,9 @@ class Project(models.Model):
 class UploadFile(models.Model):
     project = models.ForeignKey(Project, related_name='files', on_delete=models.CASCADE)
     file = models.FileField(upload_to='uploads/')
+    
+    def __str__(self) -> str:
+        return f'{self.file}'
 
 class Records(models.Model):
     """

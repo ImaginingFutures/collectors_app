@@ -1,4 +1,5 @@
-from django.urls import reverse_lazy
+import os
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
@@ -12,7 +13,7 @@ from exhibits.models import Exhibit
 
 # Create your views here.
 from .models import (ExternalResource, Project, ProjectTypes, ProjectParticipant, Place, Themes, Keywords,
-                     Rights, UploadFile)
+                     Rights, UploadFile, Records)
 from .forms import (ExternalResourceForm, KeywordForm, PlaceForm, ProjectForm, ProjectParticipantForm, ThemeForm, UploadForm)
 
 from dal import autocomplete
@@ -160,6 +161,13 @@ class ProjectDetailView(DetailView):
         
         project = self.get_object()
         
+        files = UploadFile.objects.filter(
+            models.Q(
+                project=project
+            )
+        )
+        
+        context['files'] = files
         context['themes'] = project.themes.all()
         context['keywords'] = project.keywords.all()
         context['users'] = project.users.all()
@@ -365,7 +373,10 @@ def validate_files(uploaded_file, allowed_types=TYPES):
         return False, "File type is not allowed."
     return True, 'Valid'
 
-def upload_file(request):
+# views.py
+def upload_file(request, pk=None):
+    project = None
+    context = {}
     if request.method == 'POST':
         form = UploadForm(request.POST)
         if form.is_valid():
@@ -379,13 +390,24 @@ def upload_file(request):
                     return JsonResponse({'error': message}, status=400)
                 
                 UploadFile.objects.create(project=project, file=file)
-            return redirect('home')
+            return redirect('project_dashboard')
         else:
             logger.debug(f'Form errors: {form.errors}')
     else:
-        form = UploadForm()
+        if pk:
+            project = get_object_or_404(Project, pk=pk)
+            form = UploadForm(initial={'project': project})
+            form.fields['project'].widget.attrs['readonly'] = True
+            form.fields['project'].widget.attrs['disabled'] = True
+        else:
+            form = UploadForm()
+    
+    context['form'] = form
+    context['project_id'] = pk
+    context['project'] = project
+    context['next_url'] = request.GET.get('next', '')
             
-    return render(request, 'CA_Django_connector/files/upload.html', {'form': form})
+    return render(request, 'CA_Django_connector/files/upload.html', context)
 
 
 class ProjectFilesView(ListView):
@@ -405,8 +427,21 @@ class ProjectFilesView(ListView):
 
 class FileDeleteView(DeleteView):
     model = UploadFile
-    template_name = 'dbgestor/Base/confirm_delete.html'
+    template_name = 'CA_Django_connector/common/confirm_delete.html'
     success_url = reverse_lazy('project_dashboard')  
 
     def get_success_url(self):
         return self.request.GET.get('next', self.success_url)
+
+    def delete(self, request, *args, **kwargs):
+        logger.debug("PReparing to delete file")
+        self.object = self.get_object()
+        file_path = self.object.file.path
+        logger.debug(f"File path to delete {file_path}")
+        response = super().delete(request, *args, **kwargs)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            logger.debug(f"File {file_path} deleted successfully")
+        else:
+            logger.debug(f"File {file_path} does not exist")
+        return response

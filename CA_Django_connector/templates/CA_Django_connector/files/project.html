@@ -9,7 +9,7 @@
     <div class="list-group">
         {% for file in files %}
         <a href="{{ file.file.url }}" class="list-group-item list-group-item-action">
-            {{ file.file.name }} - {{ file.pk }}
+            {{ file.file.name }}
         </a>
         <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('{% url 'file_delete' file.pk %}');"><i class="fas fa-trash-alt" aria-label="Delete"></i></button>
         {% empty %}
@@ -26,15 +26,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteConfirmationModalLabel">{% trans 'Confirmar borrado' %}</h5>
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">{% trans 'Confirm delete' %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {% trans '¿Está seguro de querer borrar este elemento?' %}
+                {% trans 'Do you want to delete this?' %}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Cancelar' %}</button>
-                <button type="button" class="btn btn-danger" id="deleteConfirmBtn">{% trans 'Borrar' %}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Cancel' %}</button>
+                <button type="button" class="btn btn-danger" id="deleteConfirmBtn">{% trans 'Delete' %}</button>
             </div>
         </div>
     </div>

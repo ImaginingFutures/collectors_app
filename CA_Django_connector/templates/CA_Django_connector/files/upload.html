@@ -8,7 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12 shadow auth-forms-container">
             <h2 class="mb-3 page-title">Upload Files</h2>
-            <form action="{% url 'upload' %}" method="POST" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">
+            <form action="{% if project_id %}{% url 'upload_with_project' project_id %}{% else %}{% url 'upload' %}{% endif %}" method="POST" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% include '_form_errors.html' %}
                 <div class="mb-3">
@@ -17,39 +17,42 @@
                 </div>
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end upload-buttons">
-                    <a href="{% url 'project_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    <a href="{% if next_url %}{{ next_url }}{% else %}{% url 'project_dashboard' %}{% endif %}" class="btn btn-secondary" id="cancelButton">Cancel</a>
                     <button type="submit" class="btn btn-primary" id="submit-all">Submit</button>
                 </div>
             </form>
+            <div>
+                <p>Each file must be no larger than 2 GB. You can upload up to 50 files at a time.</p>
+            </div>
         </div>
+        
     </div>
 </div>
 
     {% include '_cancel_warning.html' %}
 
     {{ form.media }}
-    
 
     <script>
         var mediatypes = 'image/jpg, image/jpeg, image/png, image/tiff, image/gif, image/bmp, image/webp, video/mp4, video/webm, video/ogg, audio/mpeg, audio/mp3, audio/ogg, audio/wav, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, text/csv, text/xml';
-        
+
         Dropzone.options.myAwesomeDropzone = {
             paramName: "file",
             autoProcessQueue: false,
             uploadMultiple: true,
-            parallelUploads: 100,
-            maxFiles: 200,
-            maxFilesize: 500,
+            parallelUploads: 10,
+            maxFiles: 50,
+            maxFilesize: 2000,
             acceptedFiles: mediatypes,
             init: function() {
                 console.log("Dropzone initialized.");
                 var myDropzone = this;
-        
+
                 // Log the added file event
                 myDropzone.on("addedfile", function(file) {
                     console.log("File added: ", file.name);
                 });
-        
+
                 document.querySelector("#submit-all").addEventListener("click", function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -62,29 +65,39 @@
                         document.querySelector("#my-awesome-dropzone").submit();
                     }
                 });
-        
+
                 myDropzone.on("sendingmultiple", function(file, xhr, formData) {
                     console.log("Sending files.");
                     formData.append("project", document.querySelector("#id_project").value);
                     console.log("Project added to formData: ", document.querySelector("#id_project").value);
                 });
-        
+
                 myDropzone.on("successmultiple", function(files, response) {
                     console.log("Files successfully uploaded.");
-                    window.location.href = "{% url 'home' %}";
+                    var projectId = "{{ project_id|escapejs }}";
+                    if (projectId) {
+                        window.location.href = `{% url 'project_files' project_id %}`;
+                    } else {
+                        window.location.href = "{% url 'project_dashboard' %}";
+                    }
                 });
-        
+
                 myDropzone.on("errormultiple", function(files, response) {
                     console.log("Error uploading files: ", response);
                     alert(response.error);
                 });
-        
+
                 myDropzone.on("queuecomplete", function() {
                     console.log("All files have been uploaded.");
-                    window.location.href = "{% url 'home' %}";
+                    var projectId = "{{ project_id|escapejs }}";
+                    if (projectId) {
+                        window.location.href = `{% url 'project_files' project_id %}`;
+                    } else {
+                        window.location.href = "{% url 'project_dashboard' %}";
+                    }
                 });
             }
         };
-        </script>
+    </script>
 
 {% endblock content %}

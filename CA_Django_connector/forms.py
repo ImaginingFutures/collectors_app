@@ -1,7 +1,7 @@
 from django import forms
 from django_ckeditor_5.widgets import CKEditor5Widget
 from dal import autocomplete
-from .models import (ExternalResource, Keywords, Place, Project, ProjectTypes, ProjectParticipant, Themes,
+from .models import (ExternalResource, Keywords, Place, Project, ProjectTypes, ProjectParticipant, Records, Themes,
                      Rights, UploadFile)
 
 class ProjectParticipantForm(forms.ModelForm):
@@ -173,4 +173,11 @@ class UploadForm(forms.ModelForm):
         widget=autocomplete.ModelSelect2(url='projects-autocomplete', attrs={'placeholder': 'Select project'}),
         label='Project Name'
     )
+
+
+class RecordsForm(forms.ModelForm):
+    class Meta:
+        model = Records
+        fields = '__all__'
+        
     

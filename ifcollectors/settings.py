@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'exhibits',
     'CA_Django_connector',
     'collected',
+    'django_cleanup.apps.CleanupConfig', # needs to be placed at last
 ]
 
 MIDDLEWARE = [
