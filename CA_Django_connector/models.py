@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
@@ -141,7 +142,15 @@ class Project(models.Model):
 
 class UploadFile(models.Model):
     project = models.ForeignKey(Project, related_name='files', on_delete=models.CASCADE)
-    file = models.FileField(upload_to='uploads/')
+
+    def project_idno_file(instance, filename):
+        # Prepends the project_idno to the filename
+        basename, file_extension = os.path.splitext(filename)
+        new_filename = "{project_idno}_{base}{ext}".format(project_idno=instance.project.project_idno, base=basename, ext=file_extension)
+        return 'uploads/{0}'.format(new_filename)
+
+    file = models.FileField(upload_to=project_idno_file)
+    #thumbnail = models.ImageField(upload_to='thumbnails/', blank=True, null=True)
     
     def __str__(self) -> str:
         return f'{self.file}'
