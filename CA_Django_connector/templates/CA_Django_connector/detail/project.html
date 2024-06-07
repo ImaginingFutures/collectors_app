@@ -127,9 +127,23 @@
             {% for file in files.all %}
                 <div class="col-md-3 mb-4">
                     <div class="card">
-                        <!-- Updated thumbnail with data-bs-target dynamic reference -->
-                        <img src="{{ file.file.url }}" class="card-img-top" style="width: 100%; height: 150px; object-fit: cover; cursor: pointer;" alt="Clickable Thumbnail" data-bs-toggle="modal" data-bs-target="#thumbnailModal{{ file.pk }}">
-
+                        <!-- Use an icon if the file is not an image -->
+                        {% if file.file.url|slice:"-3:" == 'jpg' or file.file.url|slice:"-3:" == 'png' or file.file.url|slice:"-3:" == 'gif' or file.file.url|slice:"-3:" == 'jpeg' %}
+                        <img src="{{ file.file.url }}" class="card-img-top" style="width: 100%; height: 150px; object-fit: cover; cursor: pointer;" alt="{{ file.file.name }}" data-bs-toggle="modal" data-bs-target="#mediaModal{{ file.pk }}">
+                    {% else %}
+                        <div class="card-img-top d-flex justify-content-center align-items-center" style="height: 150px; background-color: #f0f0f0; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#mediaModal{{ file.pk }}">
+                            {% if file.file.url|slice:"-3:" == 'mp4' or file.file.url|slice:"-3:" == 'mov' %}
+                                <i class="fas fa-video" style="font-size: 48px; color: gray;"></i>
+                            {% elif file.file.url|slice:"-3:" == 'mp3' %}
+                                <i class="fas fa-music" style="font-size: 48px; color: gray;"></i>
+                            {% elif file.file.url|slice:"-3:" == 'pdf' %}
+                                <i class="fas fa-file-pdf" style="font-size: 48px; color: gray;"></i>
+                            {% else %}
+                                <i class="fas fa-file" style="font-size: 48px; color: gray;"></i>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                        
                         <div class="card-body">
                             <h5 class="card-title">{{ file.file.name }}</h5>
                             <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('{% url 'file_delete' file.pk %}');"><i class="fas fa-trash-alt"></i></button>
@@ -137,16 +151,30 @@
                     </div>
                 </div>
 
-                <!-- Modal specific for each file -->
-                <div class="modal fade" id="thumbnailModal{{ file.pk }}" tabindex="-1" aria-labelledby="thumbnailModalLabel{{ file.pk }}" aria-hidden="true">
+                <!-- Modal for each file, dynamically adjusting content based on file type -->
+                <div class="modal fade" id="mediaModal{{ file.pk }}" tabindex="-1" aria-labelledby="mediaModalLabel{{ file.pk }}" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="thumbnailModalLabel{{ file.pk }}">Thumbnail Preview</h5>
+                                <h5 class="modal-title" id="mediaModalLabel{{ file.pk }}">{{ file.file.name }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <img src="{{ file.file.url }}" alt="Thumbnail" class="img-fluid">
+                                {% if file.file.url|slice:"-3:" == 'jpg' or file.file.url|slice:"-3:" == 'png' or file.file.url|slice:"-3:" == 'gif' or file.file.url|slice:"-3:" == 'jpeg' %}
+                                    <img src="{{ file.file.url }}" alt="{{ file.file.name }}" class="img-fluid">
+                                {% elif file.file.url|slice:"-3:" == 'mp4' or file.file.url|slice:"-3:" == 'mov' %}
+                                    <video controls class="img-fluid">
+                                        <source src="{{ file.file.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                {% elif file.file.url|slice:"-3:" == 'mp3' %}
+                                    <audio controls>
+                                        <source src="{{ file.file.url }}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                {% else %}
+                                    <p>Cannot preview this media type. <a href="{{ file.file.url }}" target="_blank">Try with this link</a></p>
+                                {% endif %}
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -162,6 +190,7 @@
             <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Files in this manager, not in the entire repository."><i class="fas fa-info-circle"></i></button>
         </div>
     {% endif %}
+
 
 
 
