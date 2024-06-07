@@ -1,0 +1,13 @@
+<!-- templates/articles/article_list.html -->
+{% extends "base.html" %}
+{% block content %}
+    <h2>Articles</h2>
+    <ul>
+        {% for article in object_list %}
+            <li>
+                <a href="{% url 'article_detail' pk=article.pk %}">{{ article.title }}</a>
+                - {{ article.abstract|truncatewords:20 }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

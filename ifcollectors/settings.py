@@ -323,3 +323,14 @@ DEFAULT_FROM_EMAIL = os.getenv('FROM_EMAIL', default='noreply@gmail.com')
 LOGIN_REDIRECT_URL = 'success'
 DEFAULT_HTTP_PROTOCOL = 'https'
 DEFAULT_DOMAIN = 'create.ifrepo.world'
+
+
+# handle_url config
+
+HANDLE_SYSTEM_URL = 'http://165.22.119.86:8000/api/handles/'
+HANDLE_PREFIX = '20.500.14542'
+HANDLE_ADMIN_IDX = 100
+HANDLE_USER = os.getenv('HANDLE_USER')
+HANDLE_PASSWORD = os.getenv('HANDLE_PASSWORD')
+HANDLE_HTTP_PORT = 8000
+HANDLE_TCP_UDP_PORT = 2641
