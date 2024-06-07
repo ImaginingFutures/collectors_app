@@ -34,7 +34,7 @@
     {{ form.media }}
 
     <script>
-        var mediatypes = 'image/jpg, image/jpeg, image/png, image/tiff, image/gif, image/bmp, image/webp, video/mp4, video/webm, video/ogg, audio/mpeg, audio/mp3, audio/ogg, audio/wav, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, text/csv, text/xml';
+        var mediatypes = 'image/jpg, image/jpeg, image/png, image/tiff, image/gif, image/bmp, image/webp, video/mp4, video/webm, video/ogg, audio/mpeg, audio/mp3, audio/ogg, audio/wav, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, text/csv, text/xml, model/gltf-binary';
 
         Dropzone.options.myAwesomeDropzone = {
             paramName: "file",
@@ -76,7 +76,7 @@
                     console.log("Files successfully uploaded.");
                     var projectId = "{{ project_id|escapejs }}";
                     if (projectId) {
-                        window.location.href = `{% url 'project_files' project_id %}`;
+                        window.location.href = `{% url 'project_detail' project_id %}`;
                     } else {
                         window.location.href = "{% url 'project_dashboard' %}";
                     }
@@ -91,7 +91,7 @@
                     console.log("All files have been uploaded.");
                     var projectId = "{{ project_id|escapejs }}";
                     if (projectId) {
-                        window.location.href = `{% url 'project_files' project_id %}`;
+                        window.location.href = `{% url 'project_detail' project_id %}`;
                     } else {
                         window.location.href = "{% url 'project_dashboard' %}";
                     }

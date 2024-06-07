@@ -127,39 +127,42 @@
             {% for file in files.all %}
                 <div class="col-md-3 mb-4">
                     <div class="card">
-                        <img src="{{ file.file.url }}" class="card-img-top" style="width: 100%; height: 150px; object-fit: cover;" data-toggle="modal" data-target="#imageModal{{ file.id }}">
+                        <!-- Updated thumbnail with data-bs-target dynamic reference -->
+                        <img src="{{ file.file.url }}" class="card-img-top" style="width: 100%; height: 150px; object-fit: cover; cursor: pointer;" alt="Clickable Thumbnail" data-bs-toggle="modal" data-bs-target="#thumbnailModal{{ file.pk }}">
+
                         <div class="card-body">
                             <h5 class="card-title">{{ file.file.name }}</h5>
-                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('{% url 'file_delete' file.pk %}');"><i class="fas fa-trash-alt" aria-label="Delete"></i></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('{% url 'file_delete' file.pk %}');"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Delete Confirmation Modal -->
-                <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
+                <!-- Modal specific for each file -->
+                <div class="modal fade" id="thumbnailModal{{ file.pk }}" tabindex="-1" aria-labelledby="thumbnailModalLabel{{ file.pk }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="deleteConfirmationModalLabel">{% trans 'Confirm delete' %}</h5>
+                                <h5 class="modal-title" id="thumbnailModalLabel{{ file.pk }}">Thumbnail Preview</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                {% trans 'Do you want to delete this?' %}
+                                <img src="{{ file.file.url }}" alt="Thumbnail" class="img-fluid">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Cancel' %}</button>
-                                <button type="button" class="btn btn-danger" id="deleteConfirmBtn">{% trans 'Delete' %}</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="alert alert-warning" role="alert">
-                {% trans 'No files are associated with this project.' %} <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Files in this manager, not in the entire repository."><i class="fas fa-info-circle"></i></button>
-            </div>
-        {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            {% trans 'No files are associated with this project.' %}
+            <button type="button" class="btn btn-outline-dark btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Files in this manager, not in the entire repository."><i class="fas fa-info-circle"></i></button>
+        </div>
+    {% endif %}
+
 
 
     <!-- Historial -->
@@ -184,6 +187,29 @@
 
 </div>
 
+
+<!-- Modals -->
+
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">{% trans 'Confirm delete' %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% trans 'Do you want to delete this?' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Cancel' %}</button>
+                <button type="button" class="btn btn-danger" id="deleteConfirmBtn">{% trans 'Delete' %}</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     function confirmDelete(deleteURL) {
@@ -217,4 +243,23 @@
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 </script>
+
+<script>
+        
+    document.addEventListener("DOMContentLoaded", function(event) {
+        
+        var img = document.getElementById('thumbnailImage');
+        var spinner = document.getElementById('loadingSpinner');
+        
+        if (img.complete) {
+            spinner.style.display = 'none';
+        } else {
+            img.onload = function() {
+                spinner.style.display = 'none';
+            };
+        }
+    });
+    </script>
+    
+
 {% endblock %}

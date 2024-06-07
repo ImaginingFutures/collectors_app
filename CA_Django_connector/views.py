@@ -365,7 +365,7 @@ TYPES = [
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
     'application/vnd.ms-powerpoint', 
     'application/vnd.openxmlformats-officedocument.presentationml.presentation', 
-    'text/plain', 'text/csv', 'text/xml'
+    'text/plain', 'text/csv', 'text/xml', 'model/gltf-binary'
 ]
 
 def validate_files(uploaded_file, allowed_types=TYPES):
