@@ -3,6 +3,7 @@ appslogs/apps.log
 appslogs/general.log
 __pycache__
 media/
+media
 media_backup/
 staticfiles/*
 !staticfiles/ifcollectors
