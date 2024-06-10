@@ -126,6 +126,8 @@ class Project(models.Model):
     country_or_region = models.ManyToManyField(Place, blank=True)
     external_resources = models.ManyToManyField(ExternalResource, blank=True)
     
+    ifrepourl =  models.URLField(null=True, blank=True)
+    
     thumbnail = models.ImageField(upload_to='thumbnails/', help_text='Share files under 10MB', blank=True, null=True)  
     thumbnail_rights = models.ForeignKey(Rights, on_delete=models.DO_NOTHING, related_name="thumbnail_rights", null=True)
     thumbnail_note = models.CharField(max_length=250, blank=True, null=True)

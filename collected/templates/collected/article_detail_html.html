@@ -1,0 +1,47 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<article>
+    <div class="container">
+        <div class="article-content">
+        <div class="article-header">
+    <h1>{{ article.title }}</h1>
+                        
+        <div class="authors-block">
+            {% for author in article.authors.all %}
+                {{ author.full_name }},
+            {% endfor %}
+        </div>
+                    <p><strong>
+                        
+                        {% for project in article.projects.all %}
+                            <a href="{{ project.ifrepourl }}">{{ project.name }}</a>
+                        {% endfor %}
+                    </strong></p>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-12 article-html-content">
+    
+                     {{ article.contentHTML|safe }}
+                    </div>
+                </div>
+            </div> <!-- End of article-content -->
+</div>
+</article>
+
+<script>
+window.hypothesisConfig = function () {
+  return {
+    "showHighlights": true,
+    "appType": "via"
+  };
+};
+</script>
+<script async src="https://hypothes.is/embed.js"></script>
+
+
+
+{% endblock %}
+
