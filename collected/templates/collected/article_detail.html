@@ -102,28 +102,48 @@
           const publicationDate = "{{ article.created_at|date:'Y' }}";
           const handleURL = "{{ article.handle_url }}";
       
-          // Function to reshape author names for APA style
-          function formatAPAAuthors(authors) {
-            return authors.split(", ")
-              .map(name => {
+          // Function to reshape author names for citation styles
+          function formatAuthors(authors, style) {
+            const authorsArray = authors.split(", ").map(name => {
                 const parts = name.trim().split(" ");
-                const lastName = parts.pop(); // Assumes the last part is the surname
-                const firstName = parts.join(" "); // Handles possible middle names or initials
-                return `${lastName}, ${firstName.charAt(0)}.`;
-              })
-              .sort()
-              .join(", ")
-              .replace(/, ([^,]*)$/, ', & $1'); // Replaces the last comma with ', &'
-          }
+                const lastName = parts.pop();
+                const firstName = parts.join(" ");
+                return { lastName, firstName };
+            }).sort((a, b) => a.lastName.localeCompare(b.lastName));
+        
+            switch(style) {
+                case "apa":
+                    return authorsArray
+                        .map(a => `${a.lastName}, ${a.firstName.charAt(0)}.`)
+                        .join(", ")
+                        .replace(/,([^,]*,[^,]*)$/, ' &$1');
+                case "mla":
+                    if (authorsArray.length === 1) {
+                        return `${authorsArray[0].lastName}, ${authorsArray[0].firstName}`;
+                    } else if (authorsArray.length === 2) {
+                        return `${authorsArray[0].lastName}, ${authorsArray[0].firstName} and ${authorsArray[1].lastName}, ${authorsArray[1].firstName}`;
+                    } else {
+                        return `${authorsArray[0].lastName}, ${authorsArray[0].firstName}, et al.`;
+                    }
+                case "chicago":
+                    if (authorsArray.length <= 10) {
+                        const lastAuthor = authorsArray.pop();
+                        return `${authorsArray.map(a => `${a.lastName}, ${a.firstName}`).join(", ")}, and ${lastAuthor.lastName}, ${lastAuthor.firstName}`;
+                    } else {
+                        return `${authorsArray.slice(0, 7).map(a => `${a.lastName}, ${a.firstName}`).join(", ")}, et al.`;
+                    }
+            }
+        }
+        
       
           let citation = "";
       
           if (style === "apa") {
-            citation = `${formatAPAAuthors(authors)} (${publicationDate}). ${title}. In E. Isayev, A. O'Leary McNeice, J. A. Melo Flórez & O. Uğur (Eds), ${publicationName}. Imagining Futures. ${handleURL}`;
+            citation = `${formatAuthors(authors, 'apa')} (${publicationDate}). ${title}. In E. Isayev, A. O'Leary McNeice, J. A. Melo Flórez & O. Uğur (Eds), ${publicationName}. Imagining Futures. ${handleURL}`;
           } else if (style === "mla") {
-            citation = `${authors}. "${title}." ${publicationDate}, ${handleURL}.`;
+            citation = `${formatAuthors(authors, 'mla')}. "${title}." ${publicationName}, edited by Elena Isayev et al., ${publicationDate}, ${handleURL}.`;
           } else if (style === "chicago") {
-            citation = `${authors}. ${publicationDate}. "${title}." Accessed ${publicationDate}. ${handleURL}.`;
+            citation = `${formatAuthors(authors, 'chicago')}. "${title}." Essay. In ${publicationName}, edited by Elena Isayev, Aoife O'Leary McNeice, Jairo A. Melo F., and Orhun Uğur. ${publicationDate}. ${handleURL}.`;
           }
       
           citationOutput.innerText = citation;
