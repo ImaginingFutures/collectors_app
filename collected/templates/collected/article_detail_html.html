@@ -10,7 +10,7 @@
         <h1>{{ article.title }}</h1>
 
         <div class="authors-block">
-          {% for author in article.authors.all %} {{ author.full_name }}{% if not forloop.last %}, {% endif %} {% endfor %}
+            {% for author in ordered_authors %}{{ author }}{% if not forloop.last %}, {% endif %}{% endfor %}
         </div>
         <p>
           <strong>

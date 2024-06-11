@@ -61,12 +61,34 @@ class ArticleDetailView(DetailView):
     model = Article
     template_name = 'collected/article_detail.html'
     context_object_name = 'article'
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        
+        names_objects = self.object.authors.all()
+        names = [nameo.full_name for nameo in names_objects]
+        sorted_names = sorted(names, key=lambda name: name.split()[-1])
+        
+        context['ordered_authors'] = sorted_names
+        
+        return context
 
 
 class ArticleDetailHTMLView(DetailView):
     model = Article
     template_name = 'collected/article_detail_html.html'
     context_object_name = 'article'
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        
+        names_objects = self.object.authors.all()
+        names = [nameo.full_name for nameo in names_objects]
+        sorted_names = sorted(names, key=lambda name: name.split()[-1])
+        
+        context['ordered_authors'] = sorted_names
+        
+        return context
 
 class ArticleCreateView(CreateView):
     model = Article

@@ -12,7 +12,7 @@
           <div class="article-header">
             <h2 class="card-title">{{ article.title }}</h2>
 
-            {% for author in article.authors.all %}{{ author.full_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            {% for author in ordered_authors %}{{ author }}{% if not forloop.last %}, {% endif %}{% endfor %}
 
             <p>
               <strong>
