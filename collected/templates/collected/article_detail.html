@@ -29,14 +29,7 @@
       </div>
 
       <div class="card mb-4 shadow-sm">
-        <iframe
-          src="{% static 'vendor/pdfjs/web/viewer.html' %}?file={{ article.filePDF.url|urlencode }}"
-          width="100%"
-          height="800px"
-          style="border: none"
-          ,
-          scrolling="no"
-        >
+        <iframe src="{% static 'vendor/pdfjs/web/viewer.html' %}?file={{ article.filePDF.url|urlencode }}" width="100%" height="800px" style="border: none" scrolling="no">
         </iframe>
       </div>
     </div>
@@ -67,12 +60,12 @@
             <strong>Date of Publication:</strong><br />
             {{ article.created_at }}
           </p>
-          {% if article.created_at != article.updated_at %}
+          {% comment %} {% if article.created_at != article.updated_at %}
           <p>
             <strong>Date of Update:</strong><br />
             {{ article.updated_at }}
           </p>
-          {% endif %}
+          {% endif %} {% endcomment %}
           <p>
             <strong>Keywords:</strong><br />
             {% for keyword in article.keywords.all %} {{ keyword.keyword }}{% if not forloop.last %}, {% endif %} {% endfor %}
