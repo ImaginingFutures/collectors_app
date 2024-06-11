@@ -1,7 +1,7 @@
 {% extends 'main.html' %} {% load static %} {% block content %}
 
 <article>
-  <a href="{% if next_url %} {{ next_url }} {% else %}{% url 'article_detail' article.pk %} {% endif %}" class="float" data-toggle="tooltip" data-placement="right" title="Back to the article details">
+  <a href="{% if next_url %} {{ next_url }} {% else %}{% url 'article_detail' article.pk %} {% endif %}" class="float" data-bs-toggle="tooltip" data-bs-placement="right" title="Back to the article details">
     <i class="fas fa-angle-double-left my-float"></i>
   </a>
   <div class="container">

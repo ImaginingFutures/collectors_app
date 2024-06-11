@@ -1,7 +1,7 @@
 {% extends 'main.html' %} {% load static %} {% block content %}
 
 <div class="container">
-    <a href="{% if next_url %} {{ next_url }} {% else %}{% url 'article_list' %} {% endif %}" class="float" data-toggle="tooltip" data-placement="right" title="Back to articles list">
+    <a href="{% if next_url %} {{ next_url }} {% else %}{% url 'article_list' %} {% endif %}" class="float" data-bs-toggle="tooltip" data-bs-placement="right" title="Back to articles list">
         <i class="fas fa-angle-double-left my-float"></i>
       </a>
   <div class="row">
@@ -25,7 +25,7 @@
             </p>
           </div>
           <div class="read-button">
-                <a href="{% url 'article_detail_html' article.pk %}" class="btn btn-dark active" role="button" data-toggle="tooltip" data-placement="top" title="Optimized for mobile and smaller devices">Read Online</a>
+                <a href="{% url 'article_detail_html' article.pk %}" class="btn btn-dark active" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Optimized for mobile and smaller devices">Read Online</a>
           </div>
         </div>
       </div>
@@ -81,6 +81,10 @@
               <option value="mla">MLA</option>
               <option value="chicago">Chicago</option>
             </select>
+            <button class="icon-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard">
+                <i class="far fa-copy"></i>
+            </button>
+            <div id="success-message">Citation copied!</div>                      
           </p>
           <p id="citation-output"></p>
         </div>
@@ -91,6 +95,38 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const copyButton = document.querySelector(".icon-button");
+        const citationOutput = document.getElementById("citation-output");
+        const message = document.getElementById("success-message");
+    
+        if (copyButton) {
+            copyButton.addEventListener('click', function() {
+                const range = document.createRange();
+                const selection = window.getSelection();
+                range.selectNodeContents(citationOutput);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                navigator.clipboard.writeText(selection.toString()).then(function() {
+                    message.textContent = 'Citation copied!';
+                    message.style.display = 'block';
+                    setTimeout(() => { message.style.display = 'none'; }, 3000);
+                }, function(err) {
+                    message.textContent = 'Failed to copy';
+                    message.style.display = 'block';
+                    setTimeout(() => { message.style.display = 'none'; }, 3000);
+                    console.error('Could not copy text: ', err);
+                });
+                selection.removeAllRanges();
+            });
+        } else {
+            console.error('Copy button not found');
+        }
+    });
+    
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
         const citationOutput = document.getElementById("citation-output");
         const citationStyle = document.getElementById("citation-style");
       
@@ -98,7 +134,7 @@
           const style = citationStyle.value;
           const title = "{{ article.title }}";
           const authors = `{% for author in article.authors.all %}{{ author.full_name }}{% if not forloop.last %}, {% endif %}{% endfor %}`;
-          const publicationName = "Collective Works: Volume B"
+          const publicationName = `Imagining Futures Collected Works. Un/Archival Conversations and Practices`
           const publicationDate = "{{ article.created_at|date:'Y' }}";
           const handleURL = "{{ article.handle_url }}";
       
@@ -139,20 +175,24 @@
           let citation = "";
       
           if (style === "apa") {
-            citation = `${formatAuthors(authors, 'apa')} (${publicationDate}). ${title}. In E. Isayev, A. O'Leary McNeice, J. A. Melo Flórez & O. Uğur (Eds), ${publicationName}. Imagining Futures. ${handleURL}`;
+            citation = `${formatAuthors(authors, 'apa')} (${publicationDate}). ${title}. In E. Isayev, A. O'Leary McNeice, J. A. Melo Flórez & O. Uğur (Eds), <i>${publicationName}</i>. Retrieved from ${handleURL}`;
           } else if (style === "mla") {
-            citation = `${formatAuthors(authors, 'mla')}. "${title}." ${publicationName}, edited by Elena Isayev et al., ${publicationDate}, ${handleURL}.`;
+            citation = `${formatAuthors(authors, 'mla')}. "${title}." <i>${publicationName}</i>, edited by Elena Isayev et al., ${publicationDate}, ${handleURL}.`;
           } else if (style === "chicago") {
-            citation = `${formatAuthors(authors, 'chicago')}. "${title}." Essay. In ${publicationName}, edited by Elena Isayev, Aoife O'Leary McNeice, Jairo A. Melo F., and Orhun Uğur. ${publicationDate}. ${handleURL}.`;
+            citation = `${formatAuthors(authors, 'chicago')}. "${title}." Essay. In <i>${publicationName}</i>, edited by Elena Isayev, Aoife O'Leary McNeice, Jairo A. Melo F., and Orhun Uğur. ${publicationDate}. ${handleURL}.`;
           }
       
-          citationOutput.innerText = citation;
+          citationOutput.innerHTML = citation;
         }
       
         citationStyle.addEventListener("change", generateCitation);
         generateCitation();
-      });
-      
+
+    });
+
 </script>
+
+
+
 
 {% endblock %}

@@ -465,3 +465,17 @@
 	display: flex;
 	justify-content: right;
 }
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    padding: 0 5px 0;
+}
+
+#success-message {
+	display: none; 
+	color: #1c1b1a; 
+	margin-top: 10px;
+}
