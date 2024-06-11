@@ -2,77 +2,94 @@
 {% load static %}
 {% block content %}
 
-<div class="container">
-    <h1>Articles</h1>
 
-    <form method="GET" action="">
-        <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}">
-        
-        <select name="author">
-            <option value="">Select Author</option>
-            {% for author in authors %}
-                <option value="{{ author.id }}" {% if request.GET.author == author.id|stringformat:"s" %}selected{% endif %}>
-                    {{ author.name }}
-                </option>
-            {% endfor %}
-        </select>
-        
-        <select name="project">
-            <option value="">Select Project</option>
-            {% for project in projects %}
-                <option value="{{ project.id }}" {% if request.GET.project == project.id|stringformat:"s" %}selected{% endif %}>
-                    {{ project.title }}
-                </option>
-            {% endfor %}
-        </select>
-        
-        <select name="keyword">
-            <option value="">Select Keyword</option>
-            {% for keyword in keywords %}
-                <option value="{{ keyword.id }}" {% if request.GET.keyword == keyword.id|stringformat:"s" %}selected{% endif %}>
-                    {{ keyword.name }}
-                </option>
-            {% endfor %}
-        </select>
-
-        <button type="submit">Search</button>
-    </form>
-
-    <div class="row">
-        {% for article in articles %}
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    {% if article.thumbnail %}
-                        <img src="{{ article.thumbnail.url }}" class="card-img-top" alt="{{ article.title }}">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ article.title }}</h5>
-                        <p class="card-text">{{ article.abstract|truncatewords:50|safe }}</p>
-                        <a href="{% url 'article_detail' article.pk %}" class="btn btn-primary">Read More</a>
-                    </div>
+    <div class="collected-hero-background bg-dark text-secondary px-4 py-5 text-center">
+        <div class="py-5 hero-text-container">
+          <h1 class="display-5 fw-bold text-white">Imagining Futures Collected Works</h1>
+          <h2 class="fw-bold text-white">Un/Archival Conversations and Practices</h2>
+          <div class="col-lg-6 mx-auto">
+            <p class="text-white"><i>Ed. by</i> Elena Isayev & Aoife McNeice</p>
+            <p class="fs-5 mb-4 text-white hero-description">This collection draws from the Imagining Futures projects, encapsulating the cases, knots, themes, and challenges. It leverages the expertise and experiences of the IF Network, sharing valuable insights with all those involved or interested in building egalitarian archives.</p>
+          </div>
+        </div>
+      </div>
+      <div class="container mt-4">
+        <h1 class="mb-3">Articles</h1>
+    
+        <!-- Search and Filters Form -->
+        <form method="GET" action="" class="mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ request.GET.q }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="author" class="form-select">
+                        <option value="">Select Author</option>
+                        {% for author in authors %}
+                            <option value="{{ author.id }}" {% if request.GET.author == author.id|stringformat:"s" %}selected{% endif %}>
+                                {{ author.full_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="project" class="form-select">
+                        <option value="">Select Project</option>
+                        {% for project in projects %}
+                            <option value="{{ project.id }}" {% if request.GET.project == project.id|stringformat:"s" %}selected{% endif %}>
+                                {{ project.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="keyword" class="form-select">
+                        <option value="">Select Keyword</option>
+                        {% for keyword in keywords %}
+                            <option value="{{ keyword.id }}" {% if request.GET.keyword == keyword.id|stringformat:"s" %}selected{% endif %}>
+                                {{ keyword.keyword }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </div>
-        {% endfor %}
-    </div>
-
-    <div class="pagination">
-        {% if is_paginated %}
-            <span class="step-links">
+        </form>
+    
+        <!-- Articles Grid -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for article in articles %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        {% if article.thumbnail %}
+                            <img src="{{ article.thumbnail.url }}" class="card-img-top" alt="{{ article.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ article.title }}</h5>
+                            <p class="card-text">{{ article.abstract|truncatewords:50|safe }}</p>
+                            <a href="{% url 'article_detail' article.pk %}" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    
+        <!-- Pagination -->
+        <nav aria-label="Article navigation" class="mt-4">
+            <ul class="pagination">
                 {% if page_obj.has_previous %}
-                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.author %}author={{ request.GET.author }}&{% endif %}{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.keyword %}keyword={{ request.GET.keyword }}&{% endif %}page=1">&laquo; first</a>
-                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.author %}author={{ request.GET.author }}&{% endif %}{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.keyword %}keyword={{ request.GET.keyword }}&{% endif %}page={{ page_obj.previous_page_number }}">previous</a>
+                    <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.author %}author={{ request.GET.author }}&{% endif %}{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.keyword %}keyword={{ request.GET.keyword }}&{% endif %}page=1">&laquo; First</a></li>
+                    <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.author %}author={{ request.GET.author }}&{% endif %}{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.keyword %}keyword={{ request.GET.keyword }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a></li>
                 {% endif %}
-
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-
+                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
                 {% if page_obj.has_next %}
-                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.author %}author={{ request.GET.author }}&{% endif %}{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.keyword %}keyword={{ request.GET.keyword }}&{% endif %}page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.author %}author={{ request.GET.author }}&{% endif %}{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.keyword %}keyword={{ request.GET.keyword }}&{% endif %}page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.author %}author={{ request.GET.author }}&{% endif %}{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.keyword %}keyword={{ request.GET.keyword }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.author %}author={{ request.GET.author }}&{% endif %}{% if request.GET.project %}project={{ request.GET.project }}&{% endif %}{% if request.GET.keyword %}keyword={{ request.GET.keyword }}&{% endif %}page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
                 {% endif %}
-            </span>
-        {% endif %}
+            </ul>
+        </nav>
     </div>
-</div>
+    
 {% endblock %}

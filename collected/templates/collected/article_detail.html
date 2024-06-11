@@ -1,106 +1,143 @@
-{% extends 'main.html' %}
-{% load static %}
-{% block content %}
+{% extends 'main.html' %} {% load static %} {% block content %}
 
 <div class="container">
-    <div class="row">
-        <!-- Left Column: PDF Viewer and Abstract -->
-        <div class="col-md-9">
-            <div class="card mb-4 border-0">
-                <div class="card-body">
-                    <h2 class="card-title">{{ article.title }}</h2>
-                    {% comment %} <p class="card-text">{{ article.abstract  | safe }}</p> {% endcomment %}
-                    {% comment %} uncomment the line above if you want to include the abstract on this view {% endcomment %}
+    <a href="{% if next_url %} {{ next_url }} {% else %}{% url 'article_list' %} {% endif %}" class="float" data-toggle="tooltip" data-placement="right" title="Back to articles list">
+        <i class="fas fa-angle-double-left my-float"></i>
+      </a>
+  <div class="row">
+    <!-- Left Column: PDF Viewer and Abstract -->
+    <div class="col-md-9">
+      <div class="card mb-4 border-0">
+        <div class="card-body">
+          <div class="article-header">
+            <h2 class="card-title">{{ article.title }}</h2>
 
-                        {% for author in article.authors.all %}
-                            {{ author.full_name }},
-                        {% endfor %}
+            {% for author in article.authors.all %}{{ author.full_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
 
-                    <p><strong>
-                        
-                        {% for project in article.projects.all %}
-                            <a href="{{ project.ifrepourl }}">{{ project.name }}</a>
-                        {% endfor %}
-                    </strong></p>
-
-                </div>
-            </div>
-
-            <div class="card mb-4 shadow-sm">
-                <iframe src="{% static 'vendor/pdfjs/web/viewer.html' %}?file={{ article.filePDF.url|urlencode }}" 
-                        width="100%" 
-                        height="800px" 
-                        style="border: none;", scrolling="no">
-                </iframe>
-            </div>
+            <p>
+              <strong>
+                {% for project in article.projects.all %}
+                <a href="{{ project.ifrepourl }}">{{ project.name }}</a>
+                {% endfor %}
+              </strong>
+            </p>
+          </div>
+          <div class="read-button">
+                <a href="{% url 'article_detail_html' article.pk %}" class="btn btn-dark active" role="button" data-toggle="tooltip" data-placement="top" title="Optimized for mobile and smaller devices">Read Online</a>
+          </div>
         </div>
+      </div>
 
-        <!-- Right Column: Article Details -->
-        <div class="col-md-3">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Details</h5>
-                    
-                    <p><strong>Handle URL:</strong> <a href="{{ article.handle_url }}">{{ article.handle_url }}</a></p>
-                    <p><strong>Access:</strong> {{ article.rights.name }}</p>
-                    <p><strong>Date of Publication:</strong> {{ article.created_at }}</p>
-                    {% if article.created_at != article.updated_at %}
-                        <p><strong>Date of Update:</strong> {{ article.updated_at }}</p>
-                    {% endif %}
-                    <p><strong>Keywords:</strong></p>
-                    <ul>
-                        {% for keyword in article.keywords.all %}
-                            <li>{{ keyword.keyword }}</li>
-                        {% endfor %}
-                    </ul>
-
-                    <h5 class="card-title">Citation</h5>
-                    <p>
-                        <label for="citation-style">Choose a citation style:</label>
-                        <select id="citation-style">
-                            <option value="apa">APA 7</option>
-                            <option value="mla">MLA</option>
-                            <option value="chicago">Chicago</option>
-                        </select>
-                    </p>
-                    <p id="citation-output"></p>
-                </div>
-            </div>
-        </div>
+      <div class="card mb-4 shadow-sm">
+        <iframe
+          src="{% static 'vendor/pdfjs/web/viewer.html' %}?file={{ article.filePDF.url|urlencode }}"
+          width="100%"
+          height="800px"
+          style="border: none"
+          ,
+          scrolling="no"
+        >
+        </iframe>
+      </div>
     </div>
+
+    <!-- Right Column: Article Details -->
+    <div class="col-md-3">
+      <div class="card mb-4 article-details">
+        <div class="card-body">
+          <h5 class="card-title">Details</h5>
+
+          <p>
+            <strong>Handle URL:</strong> <br /><a
+              href="{{ article.handle_url }}"
+              >{{ article.handle_url }}</a
+            >
+          </p>
+          <p>
+            <strong>Access:</strong> <br /><a
+              href="{{ article.rights.canonical_url }}"
+              target="_blank"
+              ><img
+                src="{{ article.rights.icon_url }}"
+                alt="{{ article.rights.license_abreviation }} Icon"
+                class="rights-icon"
+            /></a>
+          </p>
+          <p>
+            <strong>Date of Publication:</strong><br />
+            {{ article.created_at }}
+          </p>
+          {% if article.created_at != article.updated_at %}
+          <p>
+            <strong>Date of Update:</strong><br />
+            {{ article.updated_at }}
+          </p>
+          {% endif %}
+          <p>
+            <strong>Keywords:</strong><br />
+            {% for keyword in article.keywords.all %} {{ keyword.keyword }}{% if not forloop.last %}, {% endif %} {% endfor %}
+          </p>
+
+          <h5 class="card-title">Citation</h5>
+          <p>
+            <label for="citation-style">Choose a citation style:</label>
+            <select id="citation-style">
+              <option value="apa">APA 7</option>
+              <option value="mla">MLA</option>
+              <option value="chicago">Chicago</option>
+            </select>
+          </p>
+          <p id="citation-output"></p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-
-    // Citation generation
-    const citationOutput = document.getElementById('citation-output');
-    const citationStyle = document.getElementById('citation-style');
-
-    function generateCitation() {
-        const style = citationStyle.value;
-        const title = "{{ article.title }}";
-        const authors = `{% for author in article.authors.all %}{{ author.full_name }}{% if not forloop.last %}, {% endif %}{% endfor %}`;
-        const publicationDate = "{{ article.created_at|date:'Y' }}";
-        const handleURL = "{{ article.handle_url }}";
-        
-        let citation = '';
-
-        if (style === 'apa') {
-            citation = `${authors} (${publicationDate}). ${title}. Retrieved from ${handleURL}`;
-        } else if (style === 'mla') {
+    document.addEventListener("DOMContentLoaded", function () {
+        const citationOutput = document.getElementById("citation-output");
+        const citationStyle = document.getElementById("citation-style");
+      
+        function generateCitation() {
+          const style = citationStyle.value;
+          const title = "{{ article.title }}";
+          const authors = `{% for author in article.authors.all %}{{ author.full_name }}{% if not forloop.last %}, {% endif %}{% endfor %}`;
+          const publicationName = "Collective Works: Volume B"
+          const publicationDate = "{{ article.created_at|date:'Y' }}";
+          const handleURL = "{{ article.handle_url }}";
+      
+          // Function to reshape author names for APA style
+          function formatAPAAuthors(authors) {
+            return authors.split(", ")
+              .map(name => {
+                const parts = name.trim().split(" ");
+                const lastName = parts.pop(); // Assumes the last part is the surname
+                const firstName = parts.join(" "); // Handles possible middle names or initials
+                return `${lastName}, ${firstName.charAt(0)}.`;
+              })
+              .sort()
+              .join(", ")
+              .replace(/, ([^,]*)$/, ', & $1'); // Replaces the last comma with ', &'
+          }
+      
+          let citation = "";
+      
+          if (style === "apa") {
+            citation = `${formatAPAAuthors(authors)} (${publicationDate}). ${title}. In E. Isayev & A. O'Leary McNeice (Ed), ${publicationName}. Imagining Futures. ${handleURL}`;
+          } else if (style === "mla") {
             citation = `${authors}. "${title}." ${publicationDate}, ${handleURL}.`;
-        } else if (style === 'chicago') {
+          } else if (style === "chicago") {
             citation = `${authors}. ${publicationDate}. "${title}." Accessed ${publicationDate}. ${handleURL}.`;
+          }
+      
+          citationOutput.innerText = citation;
         }
-
-        citationOutput.innerText = citation;
-    }
-
-    citationStyle.addEventListener('change', generateCitation);
-    generateCitation();
-});
+      
+        citationStyle.addEventListener("change", generateCitation);
+        generateCitation();
+      });
+      
 </script>
-
 
 {% endblock %}

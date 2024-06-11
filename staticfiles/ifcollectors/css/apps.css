@@ -338,6 +338,47 @@
     object-fit: cover;
 } */
 
+.collected-hero-background {
+    background-image: url('https://ifrepo.world/themes/imagining/assets/pawtucket/graphics/hero_1.webp'); /* Add your image path here */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.collected-hero-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity to get desired darkness */
+    z-index: 1;
+}
+
+.text-secondary {
+    position: relative;
+    z-index: 2; /* Ensures text appears above the dark overlay */
+}
+
+.hero-text-container {
+    position: relative;
+    z-index: 3; /* Higher z-index to ensure visibility above overlay */
+}
+
+.hero-text-container h1, .hero-text-container h2 {
+	font-family: 'Merriweather', serif;
+}
+
+.hero-text-container p {
+	font-family: 'Open Sans', sans-serif;
+}
+
+.hero-text-container .hero-description {
+	font-style: italic;
+	padding-top: 20px;
+}
+
 .article-content {
 	font-family: 'Open Sans', sans-serif;
 	max-width: 800px;
@@ -389,3 +430,38 @@
 	border-radius: 5px;
 }
 
+.float{
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    top: 93px;
+    left: 19px;
+    background-color: rgb(29, 31, 30);
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+}
+
+
+.my-float{
+	margin-top:12px;
+}
+
+.article-details {
+	border: none;
+	box-shadow: none;
+	padding-top: 250px;
+}
+
+@media (max-width: 767px) {
+	.article-details {
+		padding-top: 20px;
+	}
+}
+
+.read-button {
+	position: relative;
+	display: flex;
+	justify-content: right;
+}

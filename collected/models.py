@@ -42,7 +42,8 @@ class Article(models.Model):
                 
                 self.thumbnail.save(self.filePDF.name.split('.')[0] + '_thumb.jpg', File(temp_thumb), save=False)
         
-        ## support anchor links
+        ## support anchor links because CKEditor 5 hasn't implemented that feature yet :\ 
+        ## https://github.com/ckeditor/ckeditor5/issues/1944
         soup = BeautifulSoup(self.contentHTML, 'html.parser')
         
         for index, anchor in enumerate(soup.find_all('a', href=True), start=1):

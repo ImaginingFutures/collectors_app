@@ -21,7 +21,7 @@ class ArticleListView(ListView):
             queryset = queryset.filter(
                 Q(title__icontains=query) |
                 Q(authors__full_name__icontains=query) |
-                Q(abstract__icontains=query)
+                Q(contentHTML__icontains=query)
             ).distinct()
             
         # Filter by authors
@@ -44,9 +44,15 @@ class ArticleListView(ListView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         
-        context['authors'] = ProjectParticipant.objects.all()
-        context['projects'] = Project.objects.all()
-        context['keywords'] = Keywords.objects.all()
+        context['authors'] = ProjectParticipant.objects.filter(
+            article__in=Article.objects.all()
+        ).distinct()
+        context['projects'] = Project.objects.filter(
+            article__in=Article.objects.all()
+        ).distinct()
+        context['keywords'] = Keywords.objects.filter(
+            article__in=Article.objects.all()
+        ).distinct()
         
         return context
 
