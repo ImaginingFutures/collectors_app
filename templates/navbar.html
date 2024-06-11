@@ -52,23 +52,14 @@
                         <li class='nav-item'>
                             <a class='nav-link' href="{% url 'admin:index' %}" target="_blank">Collectors admin</a>
                         </li>
-
+                    {% elif request.user.is_staff %}
+                    <li class='nav-item'>
+                        <a class='nav-link' href="{% url 'admin:index' %}" target="_blank">Volume B administration</a>
+                    </li>
                     {% endif %}
                       {% if user.is_authenticated %}
-                      {% with user_groups=user.groups.all %}
-                          {% if user_groups %}
-                              <li class='nav-item'>
-                                  <span class='dropdown-item-text'>Group{{ user_groups|length|pluralize:"s" }}:</span>
-                              </li>
-                              {% for group in user_groups %}
-                                  <li class='nav-item group-name'>
-                                      <span class='dropdown-item-text'>{{ group.name }}</span>
-                                  </li>
-                              {% endfor %}
-                          {% endif %}
-                      {% endwith %}
                           <li class='nav-item'>
-                              <a class='nav-link' href="{% url 'logout' %}">Log Out</a>
+                              <a class='nav-link' href="{% url 'logout' %}?next={{ request.path }}">Log Out</a>
                           </li>
                       {% else %}
                           <li class='nav-item'>
