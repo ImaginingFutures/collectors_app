@@ -358,14 +358,15 @@ class RightsBrowse(ListView):
 
 TYPES = [
     'image/jpeg', 'image/png', 'image/tiff', 'image/gif', 'image/bmp', 'image/webp', 
-    'video/mp4', 'video/webm', 'video/ogg', 'audio/mpeg', 'audio/mp4', 'audio/ogg', 
+    'video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'audio/mpeg', 'audio/mp4', 'audio/ogg', 
     'audio/wav', 'application/pdf', 'application/msword', 
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
     'application/vnd.ms-excel', 
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
     'application/vnd.ms-powerpoint', 
     'application/vnd.openxmlformats-officedocument.presentationml.presentation', 
-    'text/plain', 'text/csv', 'text/xml', 'model/gltf-binary'
+    'text/plain', 'text/csv', 'text/xml', 'model/gltf-binary', 'application/zip',
+    'application/x-zip-compressed', 'application/x-compressed', 'multipart/x-zip'
 ]
 
 def validate_files(uploaded_file, allowed_types=TYPES):
@@ -385,6 +386,7 @@ def upload_file(request, pk=None):
             for key in request.FILES:
                 file = request.FILES[key]
                 logger.debug(f'File to upload: {file}')
+                logger.debug(f'File to upload: {file}, MIME type: {file.content_type}')
                 is_valid, message = validate_files(file)
                 if not is_valid:
                     return JsonResponse({'error': message}, status=400)

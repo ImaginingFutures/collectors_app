@@ -34,7 +34,7 @@
     {{ form.media }}
 
     <script>
-        var mediatypes = 'image/jpg, image/jpeg, image/png, image/tiff, image/gif, image/bmp, image/webp, video/mp4, video/webm, video/ogg, audio/mpeg, audio/mp3, audio/ogg, audio/wav, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, text/csv, text/xml, model/gltf-binary,  application/zip';
+        var mediatypes = 'image/jpg, image/jpeg, image/png, image/tiff, image/gif, image/bmp, image/webp, video/mp4, video/webm, video/ogg, video/quicktime, audio/mpeg, audio/mp3, audio/ogg, audio/wav, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, text/csv, text/xml, model/gltf-binary, application/zip';
 
         Dropzone.options.myAwesomeDropzone = {
             paramName: "file",
@@ -43,7 +43,7 @@
             parallelUploads: 10,
             maxFiles: 50,
             maxFilesize: 2000,
-            acceptedFiles: mediatypes,
+            //acceptedFiles: mediatypes,
             init: function() {
                 console.log("Dropzone initialized.");
                 var myDropzone = this;
