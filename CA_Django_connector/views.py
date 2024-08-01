@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, UpdateView, TemplateView, ListView, DeleteView
 
@@ -152,9 +152,19 @@ class ProjectUpdateView(UpdateView):
     def get_success_url(self) -> str:
         return reverse_lazy('project_detail', kwargs={'pk': self.object.pk})
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = "CA_Django_connector/detail/project.html"
+    
+    def get_queryset(self):
+        return Project.objects.filter(users=self.request.user)
+    
+    def get_object(self, queryset=None):
+        queryset = queryset or self.get_queryset()
+        obj = super().get_object(queryset=queryset)
+        if not obj.users.filter(id=self.request.user.id).exists():
+            raise Http404("No Project matches the given query.")
+        return obj
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
