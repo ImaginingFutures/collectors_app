@@ -1,4 +1,5 @@
 .env
+.venv
 appslogs/apps.log
 appslogs/general.log
 __pycache__

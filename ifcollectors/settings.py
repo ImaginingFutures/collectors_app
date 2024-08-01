@@ -32,7 +32,11 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-@af+y)h9j@l4sli8=r+7j33y3u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['172.22.139.213', '127.0.0.1', 'ifrepo.world', 'localhost', 'create.ifrepo.world']
+ALLOWED_HOSTS = ['172.22.139.213', '127.0.0.1', 'ifrepo.world', 'localhost', 'create.ifrepo.world', 'create.ifrepo.foundation']
+
+CSRF_TRUSTED_ORIGINS = ['https://create.ifrepo.world', 'https://create.ifrepo.foundation']
+CSRF_ALLOWED_ORIGINS = ['https://create.ifrepo.world', 'https://create.ifrepo.foundation']
+CORS_ORIGINS_WHITELIST = ['https://create.ifrepo.world', 'https://create.ifrepo.foundation']
 
 # custom url to login
 #LOGIN_URL = '/collectors/users/login_user/'
