@@ -24,9 +24,11 @@
               </strong>
             </p>
           </div>
+          {% if article.contentHTML %}
           <div class="read-button">
                 <a href="{% url 'article_detail_html' article.pk %}" class="btn btn-dark active" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Optimized for mobile and smaller devices">Read Online</a>
           </div>
+          {% endif %}
         </div>
       </div>
 
