@@ -3,9 +3,11 @@ from CA_Django_connector.models import ProjectParticipant, Project, Keywords, Ri
 from PIL import Image
 from io import BytesIO
 import re
+import tempfile
+import os
 from django.core.files import File
 from django_ckeditor_5.fields import CKEditor5Field
-from pdf2image import convert_from_bytes
+from pdf2image import convert_from_path
 from bs4 import BeautifulSoup
 
 import logging
@@ -29,18 +31,30 @@ class Article(models.Model):
     def save(self, *args, **kwargs):
         # Creating a thumbnail
         if self.filePDF and not self.thumbnail:
-            images = convert_from_bytes(self.filePDF.read())
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp:
+                # Read PDF from S3 and write to temp file
+                self.filePDF.seek(0)  # Reset file pointer
+                tmp.write(self.filePDF.read())
+                tmp.flush()
+                tmp_path = tmp.name
             
-            if images:
+            try:
+                images = convert_from_path(tmp_path)
                 
-                first_page = images[0]
-                first_page.thumbnail((300, 300))
-                
-                temp_thumb = BytesIO()
-                first_page.save(temp_thumb, format="JPEG")
-                temp_thumb.seek(0)
-                
-                self.thumbnail.save(self.filePDF.name.split('.')[0] + '_thumb.jpg', File(temp_thumb), save=False)
+                if images:
+                    first_page = images[0]
+                    first_page.thumbnail((300, 300))
+                    
+                    temp_thumb = BytesIO()
+                    first_page.save(temp_thumb, format="JPEG")
+                    temp_thumb.seek(0)
+                    
+                    self.thumbnail.save(self.filePDF.name.split('.')[0] + '_thumb.jpg', File(temp_thumb), save=False)
+            finally:
+                # Clean up temp file
+                import os
+                if os.path.exists(tmp_path):
+                    os.remove(tmp_path)
         
         ## support anchor links because CKEditor 5 hasn't implemented that feature yet :\ 
         ## https://github.com/ckeditor/ckeditor5/issues/1944
