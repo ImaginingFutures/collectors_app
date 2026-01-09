@@ -1,11 +1,16 @@
 from typing import Any
 from django.db.models.query import QuerySet, Q
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.http import HttpResponse, Http404
+from django.views import View
 from .models import Article
 from .forms import ArticleForm
 from CA_Django_connector.models import (
     ProjectParticipant, Project, Keywords
 )
+import logging
+
+logger = logging.getLogger("ifcollectors")
 
 class ArticleListView(ListView):
     model = Article
@@ -99,3 +104,37 @@ class ArticleUpdateView(UpdateView):
     model = Article
     form_class = ArticleForm
     template_name = 'collected/article_form.html'
+
+
+class ArticlePDFProxyView(View):
+    """
+    Proxy view to serve PDFs from S3 through Django.
+    This solves PDF.js cross-origin issues by serving PDFs from the same domain.
+    """
+    
+    def get(self, request, pk):
+        try:
+            article = Article.objects.get(pk=pk)
+            
+            if not article.filePDF:
+                raise Http404("PDF not found")
+            
+            # Open the file from S3
+            pdf_file = article.filePDF.open('rb')
+            
+            # Create response with PDF content
+            response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+            response['Content-Disposition'] = f'inline; filename="{article.filePDF.name.split("/")[-1]}"'
+            response['Accept-Ranges'] = 'bytes'
+            
+            # Add CORS headers for safety
+            response['Access-Control-Allow-Origin'] = '*'
+            
+            pdf_file.close()
+            return response
+            
+        except Article.DoesNotExist:
+            raise Http404("Article not found")
+        except Exception as e:
+            logger.error(f"Error serving PDF for article {pk}: {e}")
+            raise Http404("Error loading PDF")
