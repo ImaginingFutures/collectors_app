@@ -163,10 +163,29 @@ CACHES = {
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# S3/DigitalOcean Spaces Configuration
+AWS_ACCESS_KEY_ID = os.getenv('DO_SPACES_KEY')
+AWS_SECRET_ACCESS_KEY = os.getenv('DO_SPACES_SECRET')
+AWS_STORAGE_BUCKET_NAME = 'imaginingfutures-collectors'
+AWS_S3_ENDPOINT_URL = 'https://fra1.digitaloceanspaces.com'
+AWS_S3_REGION_NAME = 'fra1'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.fra1.digitaloceanspaces.com'
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_DEFAULT_ACL = 'public-read'
+AWS_QUERYSTRING_AUTH = False  # Don't add authentication query params to URLs
+AWS_LOCATION = ''  # Files are at bucket root (pdfs/, thumbnails/, uploads/)
+
+# Use S3 for default file storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
+# Keep MEDIA_ROOT for local development/fallback
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+# MEDIA_URL now points to S3 CDN
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 
 CKEDITOR_5_FILE_STORAGE = "CA_Django_connector.storage.CustomStorage"
 
